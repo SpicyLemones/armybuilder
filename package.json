@@ -1,0 +1,27 @@
+{
+  "name": "armybuilder",
+  "version": "1.0.0",
+  "description": "price aggregator for wargaming",
+  "homepage": "https://github.com/SpicyLemones/armybuilder#readme",
+  "bugs": {
+    "url": "https://github.com/SpicyLemones/armybuilder/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SpicyLemones/armybuilder.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "commonjs",
+  "main": "server.js",
+  "scripts": {
+    "test": "test",
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "https": "^1.0.0"
+  }
+}
