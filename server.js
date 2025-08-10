@@ -18,7 +18,7 @@ var app = express();
 app.use(express.urlencoded({ extended: true }));
 
 // set up sqlite sir
-const db = new sqlite3.Database("./db/data.sql");
+const db = new sqlite3.Database("./db/data.sqlite");
 
 // shorthand for reading files because im autistic and like little ravioli functions
 const file = (filename, encoding) => {
