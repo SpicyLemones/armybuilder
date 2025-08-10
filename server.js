@@ -13,8 +13,14 @@ var options = {
 var app = express();
 
 app.get('/', (req, res) => {
-  scrape().then(result => {
-    res.send(result[0]);
+  const query = 'primaris crusader squad';
+  scrape(query).then(result => {
+    var text = `<div>Search query: \'${query}\'`;
+    result.forEach(site => {
+      text += '<div>' + site.site + ' price: ' + site.price + ', ' + site.link + '</div>';
+    })
+    text += '</div>';
+    res.send(text);
   })
 })
 
