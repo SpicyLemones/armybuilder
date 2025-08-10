@@ -74,6 +74,7 @@ export async function scrape(query) {
         args: [
             '--no-sandbox', 
             '--disable-setuid-sandbox',
+            '--dns-prefetch-disable',
             '--ignore-certificate-errors',
             '--ignore-certificate-errors-spki-list'],
         ignoreHTTPSErrors: true
