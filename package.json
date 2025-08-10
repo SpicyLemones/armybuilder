@@ -24,6 +24,7 @@
     "fs": "^0.0.1-security",
     "http": "^0.0.1-security",
     "https": "^1.0.0",
-    "puppeteer": "^24.16.0"
+    "puppeteer": "^24.16.0",
+    "sqlite3": "^5.1.7"
   }
 }
