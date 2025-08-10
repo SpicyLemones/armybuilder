@@ -1,3 +1,3 @@
-###ARMY BUILDER WEBSITE
+### ARMY BUILDER WEBSITE
 
-tbd
+Website for building and planning wargaming armies and comparing online retailer prices.
