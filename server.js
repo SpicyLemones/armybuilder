@@ -1,17 +1,21 @@
-var express = require('express');
-var https = require('https');
-var http = require('http');
-var fs = require('fs');
+import express from 'express';
+import https from 'https';
+import http from 'http';
+import fs from 'fs';
+
+import { scrape } from './scraper.js'
 
 var options = {
-    key: fs.readFileSync('key.pem'),
-    cert: fs.readFileSync('cert.cert')
+  key: fs.readFileSync('key.pem'),
+  cert: fs.readFileSync('cert.cert')
 }
 
 var app = express();
 
 app.get('/', (req, res) => {
-  res.send('hi')
+  scrape().then(result => {
+    res.send(result[0]);
+  })
 })
 
 http.createServer(app).listen(80);
