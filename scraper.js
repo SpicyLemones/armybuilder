@@ -49,6 +49,10 @@ async function scrapeSeller(seller, page, item) {
 }
 
 export const scrape = async (sellers, items) => {
+  // track time to update
+  console.log("Scraping sellers...");
+  const start = new Date();
+
   // puppeteer setup
   puppeteer.use(StealthPlugin());
 
@@ -73,7 +77,7 @@ export const scrape = async (sellers, items) => {
     browsers.push(browser);
 
     for (const seller of sellers) {
-      console.log(`Looking for \'${item.name}\' at ${seller.name}`);
+      //console.log(`Looking for \'${item.name}\' at ${seller.name}`);
       // page for scraping
       const page = await browser.newPage();
 
@@ -87,6 +91,12 @@ export const scrape = async (sellers, items) => {
   }
 
   const resolved = await Promise.all(results);
+  console.log(
+    `Scraped all sellers in ${
+      Math.round((new Date() - start) / 100) / 10
+    } seconds`
+  );
+
   await Promise.all(browsers.map((browser) => browser.close()));
 
   return resolved.map((result) => {
