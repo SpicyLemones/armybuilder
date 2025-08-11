@@ -5,6 +5,7 @@ import fs from "fs";
 import sqlite3 from "sqlite3";
 
 import { scrape } from "./scraper.js";
+import { fuzzy } from "./search.js";
 import { resolve } from "path";
 
 // https shit im too lazy to actually use this yet
@@ -80,6 +81,16 @@ const setupDB = () => {
       await query("run", "create/prices");
       await query("run", "create/sellers");
       await query("run", "insert/seller", [
+        "Warhammer Official",
+        "https://www.warhammer.com/en-AU/",
+        "plp?search=",
+        '[data-test="product-card"]',
+        ".full-unstyled-link",
+        "a.product-card-image",
+        '[data-testid="product-card-current-price"]',
+        ".NOSALESBITCH",
+      ]);
+      await query("run", "insert/seller", [
         "The Combat Company",
         "https://thecombatcompany.com",
         "/search?q=",
@@ -109,18 +120,11 @@ const setupDB = () => {
         '[data-testid="product-card-current-price"]',
         ".product__price--on-sale",
       ]);
-      await query("run", "insert/seller", [
-        "Warhammer Official",
-        "https://www.warhammer.com/en-AU/",
-        "plp?search=",
-        "div.product-card",
-        ".full-unstyled-link",
-        "a.product-card-image",
-        '[data-testid="product-card-current-price"]',
-        ".NOSALESBITCH",
-      ]);
 
-      await query("run", "insert/item", ["primaris crusader squad"]);
+      await query("run", "insert/item", ["Necron Immortals"]);
+      await query("run", "insert/item", ["Primaris Crusader Squad"]);
+      await query("run", "insert/item", ["Terminator Squad"]);
+      await query("run", "insert/item", ["Infernus Squad"]);
 
       res(this);
     });
@@ -195,16 +199,39 @@ app.get("/", (req, res) => {
 
 // search page
 app.get("/search", (req, res) => {
-  // look for the item in our data base
-  query("get", "select/item_name", [req.query?.q], (item) =>
+  // grab all items in the database
+  query("all", "select/all_items", [], (items) => {
+    var text =
+      debugDB +
+      homeButton +
+      searchBar +
+      `<div>Search query: \'${req.query.q}\'`;
+    // fuzzy search
+    const results = fuzzy(req.query.q.trim(), items, 0.25, (item) => item.name);
+    if (results?.length > 0) {
+      results.sort((a, b) => a.score - b.score);
+      results.forEach((result) => {
+        text +=
+          `<div><a href=\'/product?q=${result.result.id}\'>` +
+          result.result.name +
+          "</a></div>";
+      });
+    } else {
+      text += "<div>No results</div>";
+    }
+    text += "</div>";
+    res.send(text);
+  });
+});
+
+app.get("/product", (req, res) => {
+  query("get", "select/item_id", [req.query?.q], (item) =>
     // grab all known prices for that item from all sellers
     query("all", "select/display_prices", [item?.id], (prices) => {
       var text =
-        debugDB +
-        homeButton +
-        searchBar +
-        `<div>Search query: \'${req.query.q}\'`;
+        debugDB + homeButton + searchBar + `<div>Product: \'${item.name}\'`;
       // display each price from each seller as a link to the seller's page
+      prices?.sort((a, b) => a.price - b.price);
       prices?.forEach((price) => {
         text +=
           `<div><a href=\'${price.link}\'>` +

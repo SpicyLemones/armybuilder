@@ -1,6 +1,7 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
-async function scrapeSite(seller, page, item) {
+async function scrapeSeller(seller, page, item) {
   const search =
     seller.base_url + seller.search_url + encodeURIComponent(item.name);
 
@@ -13,14 +14,28 @@ async function scrapeSite(seller, page, item) {
   // grab all the items that show up on the page when we search
   const items = await page.$$eval(
     seller.item_selector,
-    (items, selectors) =>
+    (items, args) =>
       items.map((el) => ({
-        name: el.querySelector(selectors.name_selector)?.innerText.trim(),
-        link: el.querySelector(selectors.link_selector)?.href.trim(),
-        price: el.querySelector(selectors.price_selector)?.innerText.trim(),
-        sale: el.querySelector(selectors.sale_selector)?.innerText.trim(),
+        seller_id: args.seller_id,
+        item_id: args.item_id,
+        name: el.querySelector(args.name_selector)?.innerText.trim(),
+        link: el.querySelector(args.link_selector)?.href.trim(),
+        price: parseFloat(
+          el
+            .querySelector(args.price_selector)
+            ?.innerText.trim()
+            .replace(/[^0-9.-]+/g, "")
+        ),
+        sale: parseFloat(
+          el
+            .querySelector(args.sale_selector)
+            ?.innerText.trim()
+            .replace(/[^0-9.-]+/g, "")
+        ),
       })),
     {
+      seller_id: seller.id,
+      item_id: item.id,
       name_selector: seller.name_selector,
       link_selector: seller.link_selector,
       price_selector: seller.price_selector,
@@ -28,51 +43,60 @@ async function scrapeSite(seller, page, item) {
     }
   );
 
+  await page.close();
+
   return items;
 }
 
-export async function scrape(sellers, items) {
+export const scrape = async (sellers, items) => {
   // puppeteer setup
-  const browser = await puppeteer.launch({
-    headless: true,
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--dns-prefetch-disable",
-      "--ignore-certificate-errors",
-      "--ignore-certificate-errors-spki-list",
-    ],
-    // aids
-    ignoreHTTPSErrors: true,
-  });
-
-  // page for scraping
-  const page = await browser.newPage();
-
-  // set user agent to prevent bot detection
-  await page.setUserAgent(
-    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
-  );
+  puppeteer.use(StealthPlugin());
 
   // for each item, scrape all sellers
+  const browsers = [];
   const results = [];
   for (const item of items) {
+    // create puppeteer browser
+    const browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        "--no-sandbox",
+        "--disable-setuid-sandbox",
+        "--dns-prefetch-disable",
+        "--ignore-certificate-errors",
+        "--ignore-certificate-errors-spki-list",
+      ],
+      // aids
+      ignoreHTTPSErrors: true,
+    });
+
+    browsers.push(browser);
+
     for (const seller of sellers) {
-      console.log(`Looking for \'${item.name}\' at ${seller.name}...`);
+      console.log(`Looking for \'${item.name}\' at ${seller.name}`);
+      // page for scraping
+      const page = await browser.newPage();
+
+      // set user agent to prevent bot detection
+      await page.setUserAgent(
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36"
+      );
       // scrape the site for all results
-      const result = await scrapeSite(seller, page, item);
-      // just take the first one
-      const first = result?.[0];
-      results.push({
-        seller_id: seller.id,
-        item_id: item.id,
-        price: first?.sale ? first?.sale : first?.price,
-        link: first?.link,
-      });
+      results.push(scrapeSeller(seller, page, item));
     }
   }
 
-  await browser.close();
+  const resolved = await Promise.all(results);
+  await Promise.all(browsers.map((browser) => browser.close()));
 
-  return results;
-}
+  return resolved.map((result) => {
+    // just do the first for now
+    const first = result[0];
+    return {
+      seller_id: first.seller_id,
+      item_id: first.item_id,
+      price: first.sale ? first.sale : first.price,
+      link: first.link,
+    };
+  });
+};
