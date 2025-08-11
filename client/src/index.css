@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Optional: your own global styles */
+body {
+  @apply bg-background text-foreground;
+  font-family: system-ui, sans-serif;
+}
