@@ -6,7 +6,7 @@ import sqlite3 from "sqlite3";
 import pLimit from "p-limit";
 
 import { scrape, searchSeller } from "./scraper.js";
-import { fuzzy } from "./search.js";
+import { fuzzy } from "./client/src/search.js";
 import { resolve } from "path";
 
 // https shit im too lazy to actually use this yet
@@ -77,70 +77,6 @@ const query = (type, queryName, args, callback) => {
       );
     }
   });
-};
-
-// initial manual data, eventually we should move this to a file but for now its jose mode bitch
-const setupDB = async () => {
-  await clearDB();
-  await query("run", "create/products");
-  await query("run", "create/prices");
-  await query("run", "create/sellers");
-
-  const sellersString = fs.readFileSync("./db/json/sellers.json");
-  const sellers = JSON.parse(sellersString);
-  console.log(sellers);
-  for (const seller of sellers) {
-    await query("run", "insert/seller", [
-      seller.name,
-      seller.base_url,
-      seller.search_url,
-      seller.product_selector,
-      seller.name_selector,
-      seller.link_selector,
-      seller.price_selector,
-      seller.sale_selector,
-      seller.image_selector,
-    ]);
-  }
-
-  const productsString = fs.readFileSync("./db/json/products.json");
-  const products = JSON.parse(productsString);
-  for (const product of products) {
-    await query("run", "insert/product", [product.name, product.search_term]);
-  }
-
-  const pricePromises = [];
-  for (let seller_i = 1; seller_i <= sellers.length; seller_i++) {
-    for (let product_i = 1; product_i <= products.length; product_i++) {
-      pricePromises.push(query("run", "insert/price", [seller_i, product_i]));
-    }
-  }
-
-  await Promise.all(pricePromises);
-};
-
-// delete everything but maintain the structure
-const clearDB = async () => {
-  await query("run", "delete/products");
-  await query("run", "delete/prices");
-  await query("run", "delete/sellers");
-};
-
-// asynchronously scrape all sellers for all products
-const updateDB = async () => {
-  // console.log("Updating database...");
-  // const products = await query("all", "select/all_products");
-  // const sellers = await query("all", "select/all_sellers");
-  // const scraped = await scrape(sellers, products);
-  // scraped.forEach((price) => {
-  //   query("run", "insert/price", [
-  //     price.seller_id,
-  //     price.product_id,
-  //     price.price,
-  //     price.link,
-  //   ]);
-  // });
-  // console.log("Database update complete.");
 };
 
 const homeButton = `
@@ -368,6 +304,3 @@ app.post("/db", (req, res) => {
 
 http.createServer(app).listen(80);
 //https.createServer(options, app).listen(443);
-
-// update database every 10 minutes
-setInterval(updateDB, 600000);
