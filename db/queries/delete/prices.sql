@@ -1,1 +1,1 @@
-DELETE FROM prices
+DROP TABLE IF EXISTS prices

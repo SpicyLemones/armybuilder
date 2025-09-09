@@ -1,9 +1,10 @@
 CREATE TABLE prices (
   seller_id INTEGER NOT NULL,
-  item_id INTEGER NOT NULL,
-  price REAL NOT NULL,
-  link TEXT NOT NULL,
-  PRIMARY KEY (seller_id, item_id),
+  product_id INTEGER NOT NULL,
+  price REAL,
+  link TEXT,
+  validated BOOLEAN,
+  PRIMARY KEY (seller_id, product_id),
   FOREIGN KEY (seller_id) REFERENCES sellers (id),
-  FOREIGN KEY (item_id) REFERENCES items (id)
+  FOREIGN KEY (product_id) REFERENCES products (id)
 );

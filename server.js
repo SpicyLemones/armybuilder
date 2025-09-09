@@ -3,8 +3,9 @@ import https from "https";
 import http from "http";
 import fs from "fs";
 import sqlite3 from "sqlite3";
+import pLimit from "p-limit";
 
-import { scrape } from "./scraper.js";
+import { scrape, searchSeller } from "./scraper.js";
 import { fuzzy } from "./search.js";
 import { resolve } from "path";
 
@@ -32,16 +33,21 @@ const file = (filename, encoding) => {
 // is for but i made that too in case we fucking need it idk
 // all the queries we want to use should be stored in .sql files
 // in the db/queries directory, and run using this shorthand
-// for example, if i wanna do "SELECT * FROM items" i should make
-// a db/queries/select/all_items.sql file and put that query in it
-// and then run query("all", "select/all_items"). nice very nice
+// for example, if i wanna do "SELECT * FROM products" i should make
+// a db/queries/select/all_products.sql file and put that query in it
+// and then run query("all", "select/all_products"). nice very nice
 const query = (type, queryName, args, callback) => {
   return new Promise((res, rej) => {
     if (type === "run") {
-      db.run(file(`./db/queries/${queryName}.sql`, "utf8"), args, () => {
-        callback?.(this);
-        res(this);
-      });
+      db.run(
+        file(`./db/queries/${queryName}.sql`, "utf8"),
+        args,
+        function (err) {
+          if (err) return rej(err);
+          callback?.(this);
+          res(this);
+        }
+      );
     } else if (type === "get") {
       db.get(
         file(`./db/queries/${queryName}.sql`, "utf8"),
@@ -74,90 +80,67 @@ const query = (type, queryName, args, callback) => {
 };
 
 // initial manual data, eventually we should move this to a file but for now its jose mode bitch
-const setupDB = () => {
-  return new Promise((res, rej) => {
-    db.serialize(async () => {
-      await query("run", "create/items");
-      await query("run", "create/prices");
-      await query("run", "create/sellers");
-      await query("run", "insert/seller", [
-        "Warhammer Official",
-        "https://www.warhammer.com/en-AU/",
-        "plp?search=",
-        '[data-test="product-card"]',
-        ".full-unstyled-link",
-        "a.product-card-image",
-        '[data-testid="product-card-current-price"]',
-        ".NOSALESBITCH",
-      ]);
-      await query("run", "insert/seller", [
-        "The Combat Company",
-        "https://thecombatcompany.com",
-        "/search?q=",
-        "li.grid__item",
-        ".full-unstyled-link",
-        ".full-unstyled-link",
-        ".price-item--regular",
-        ".price-item--sale",
-      ]);
-      await query("run", "insert/seller", [
-        "War For Less",
-        "https://www.warforless.com.au/",
-        "?rf=kw&kw=",
-        ".card.thumbnail.card-body",
-        ".card-title a",
-        ".card-title a",
-        ".price span",
-        ".badge--sale span",
-      ]);
-      await query("run", "insert/seller", [
-        "Gap Games",
-        "https://www.gapgames.com.au/",
-        "a/search?q=",
-        "div.product",
-        ".product__title a",
-        ".product__image-wrapper",
-        '[data-testid="product-card-current-price"]',
-        ".product__price--on-sale",
-      ]);
+const setupDB = async () => {
+  await clearDB();
+  await query("run", "create/products");
+  await query("run", "create/prices");
+  await query("run", "create/sellers");
 
-      await query("run", "insert/item", ["Necron Immortals"]);
-      await query("run", "insert/item", ["Primaris Crusader Squad"]);
-      await query("run", "insert/item", ["Terminator Squad"]);
-      await query("run", "insert/item", ["Infernus Squad"]);
+  const sellersString = fs.readFileSync("./db/json/sellers.json");
+  const sellers = JSON.parse(sellersString);
+  console.log(sellers);
+  for (const seller of sellers) {
+    await query("run", "insert/seller", [
+      seller.name,
+      seller.base_url,
+      seller.search_url,
+      seller.product_selector,
+      seller.name_selector,
+      seller.link_selector,
+      seller.price_selector,
+      seller.sale_selector,
+      seller.image_selector,
+    ]);
+  }
 
-      res(this);
-    });
-  });
+  const productsString = fs.readFileSync("./db/json/products.json");
+  const products = JSON.parse(productsString);
+  for (const product of products) {
+    await query("run", "insert/product", [product.name, product.search_term]);
+  }
+
+  const pricePromises = [];
+  for (let seller_i = 1; seller_i <= sellers.length; seller_i++) {
+    for (let product_i = 1; product_i <= products.length; product_i++) {
+      pricePromises.push(query("run", "insert/price", [seller_i, product_i]));
+    }
+  }
+
+  await Promise.all(pricePromises);
 };
 
 // delete everything but maintain the structure
-const clearDB = () => {
-  return new Promise((res, rej) => {
-    db.serialize(async () => {
-      await query("run", "delete/items");
-      await query("run", "delete/prices");
-      await query("run", "delete/sellers");
-      res(this);
-    });
-  });
+const clearDB = async () => {
+  await query("run", "delete/products");
+  await query("run", "delete/prices");
+  await query("run", "delete/sellers");
 };
 
-// asynchronously scrape all sellers for all items
+// asynchronously scrape all sellers for all products
 const updateDB = async () => {
-  console.log("Updating database...");
-  const items = await query("all", "select/all_items");
-  const sellers = await query("all", "select/all_sellers");
-  const scraped = await scrape(sellers, items);
-  scraped.forEach((price) => {
-    query("run", "insert/price", [
-      price.seller_id,
-      price.item_id,
-      price.price,
-      price.link,
-    ]);
-  });
-  console.log("Database update complete.");
+  // console.log("Updating database...");
+  // const products = await query("all", "select/all_products");
+  // const sellers = await query("all", "select/all_sellers");
+  // const scraped = await scrape(sellers, products);
+  // scraped.forEach((price) => {
+  //   query("run", "insert/price", [
+  //     price.seller_id,
+  //     price.product_id,
+  //     price.price,
+  //     price.link,
+  //   ]);
+  // });
+  // console.log("Database update complete.");
 };
 
 const homeButton = `
@@ -199,15 +182,20 @@ app.get("/", (req, res) => {
 
 // search page
 app.get("/search", (req, res) => {
-  // grab all items in the database
-  query("all", "select/all_items", [], (items) => {
+  // grab all products in the database
+  query("all", "select/all_products", [], (products) => {
     var text =
       debugDB +
       homeButton +
       searchBar +
       `<div>Search query: \'${req.query.q}\'`;
     // fuzzy search
-    const results = fuzzy(req.query.q.trim(), items, 0.25, (item) => item.name);
+    const results = fuzzy(
+      req.query.q.trim(),
+      products,
+      0.25,
+      (product) => product.name
+    );
     if (results?.length > 0) {
       results.sort((a, b) => a.score - b.score);
       results.forEach((result) => {
@@ -225,11 +213,12 @@ app.get("/search", (req, res) => {
 });
 
 app.get("/product", (req, res) => {
-  query("get", "select/item_id", [req.query?.q], (item) =>
-    // grab all known prices for that item from all sellers
-    query("all", "select/display_prices", [item?.id], (prices) => {
+  query("get", "select/product_id", [req.query?.q], (product) =>
+    // grab all known prices for that product from all sellers
+    query("all", "select/display_prices", [product?.id], (prices) => {
+      console.log(prices);
       var text =
-        debugDB + homeButton + searchBar + `<div>Product: \'${item.name}\'`;
+        debugDB + homeButton + searchBar + `<div>Product: \'${product.name}\'`;
       // display each price from each seller as a link to the seller's page
       prices?.sort((a, b) => a.price - b.price);
       prices?.forEach((price) => {
@@ -244,6 +233,95 @@ app.get("/product", (req, res) => {
       res.send(text);
     })
   );
+});
+
+app.get("/validate", async (req, res) => {
+  console.log(req.query);
+  await query("run", "update/validate_price", [
+    req.query.link.trim(),
+    req.query.price.trim(),
+    req.query.s.trim(),
+    req.query.p.trim(),
+  ]);
+  res.redirect("/tinder");
+});
+
+app.get("/invalidate", async (req, res) => {
+  await query("run", "update/invalidate_price", [req.query.s, req.query.p]);
+  res.redirect("/tinder");
+});
+
+app.get("/tinder", async (req, res) => {
+  const price = await query("get", "select/unchecked_prices");
+  console.log(price);
+  const seller = await query("get", "select/seller_id", [price.seller_id]);
+  console.log(seller);
+  const product = await query("get", "select/product_id", [price.product_id]);
+  console.log(product);
+  const products = await searchSeller(seller, product);
+
+  const validateLink = `/validate?s=${seller.id}&p=${product.id}`;
+  const invalidateLink = `/invalidate?s=${seller.id}&p=${product.id}`;
+
+  if (!products || products?.length === 0) {
+    res.redirect(invalidateLink);
+  }
+
+  const imgStringProducts = products.map((p) => ({
+    ...p,
+    img: p.img.toString("base64"),
+  }));
+
+  //imgStringProducts.sort()
+
+  const text = `
+    <div style="font-size: 48px;">Is this ${product.name}?</div>
+    <div>
+      <button onclick="openLink()">Link</button>
+      <button onclick="yuck()">Yuck</button>
+      <button onclick="yum()">Yum</button>
+    </div>
+    <img id="productImage">
+
+    <style>
+      #productImage {
+        display: block;
+        width: 100%;   /* full viewport width */
+        height: 100%;  /* full viewport height */
+        object-fit: contain; /* fill the screen, cropping if needed */
+      }
+    </style>
+
+    <script>
+      let count = 0;
+      const products = ${JSON.stringify(imgStringProducts)};
+      
+      function updateImage() {
+        if (!products[count] || !products[count].img) return;
+        const base64 = products[count].img;
+        console.log(base64);
+        document.getElementById("productImage").src = \`data:image/jpeg;base64,\${base64}\`;
+      }
+
+      updateImage();
+
+      function openLink() {
+        window.open(products[count].link, '_blank');
+      }
+
+      function yuck() {
+        count++;
+        if (count >= products.length) {
+          window.location.href=\"${invalidateLink}\";
+        }
+        else updateImage();
+      }
+
+      function yum() {
+        window.location.href=\`${validateLink}&link=\${encodeURIComponent(products[count].link)}&price=\${encodeURIComponent(products[count].price)}\`;
+      }
+    </script>`;
+  res.send(homeButton + text);
 });
 
 // debug thing for manually messing with database

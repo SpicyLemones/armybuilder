@@ -1,0 +1,90 @@
+[
+  {
+    "name": "War For Less",
+    "base_url": "https://www.warforless.com.au/",
+    "search_url": "?rf=kw&kw=*",
+    "product_selector": ".card.thumbnail.card-body",
+    "name_selector": ".card-title a",
+    "link_selector": ".card-title a",
+    "price_selector": ".price span",
+    "sale_selector": ".badge--sale span",
+    "image_selector": ".product-image"
+  },
+  {
+    "name": "Warhammer Official",
+    "base_url": "https://www.warhammer.com/en-AU/",
+    "search_url": "plp?search=*",
+    "product_selector": "[data-test=\"product-card\"]",
+    "name_selector": ".full-unstyled-link",
+    "link_selector": "a.product-card-image",
+    "price_selector": "[data-testid=\"product-card-current-price\"]",
+    "sale_selector": ".NOSALESBITCH",
+    "image_selector": ".product-image"
+  },
+  {
+    "name": "The Combat Company",
+    "base_url": "https://thecombatcompany.com",
+    "search_url": "/search?q=*",
+    "product_selector": "li.grid__item",
+    "name_selector": ".full-unstyled-link",
+    "link_selector": ".full-unstyled-link",
+    "price_selector": ".price-item--regular",
+    "sale_selector": ".price-item--sale",
+    "image_selector": ".product-image"
+  },
+  {
+    "name": "Gap Games",
+    "base_url": "https://www.gapgames.com.au/",
+    "search_url": "a/search?q=*",
+    "product_selector": "div.product",
+    "name_selector": ".product__title a",
+    "link_selector": ".product__image-wrapper",
+    "price_selector": "[data-testid=\"product-card-current-price\"]",
+    "sale_selector": ".product__price--on-sale",
+    "image_selector": ".product-image"
+  },
+  {
+    "name": "Games Empire",
+    "base_url": "https://gamesempire.com.au/",
+    "search_url": "/search?type=article%2Cpage%2Cproduct&q=*",
+    "product_selector": ".productitem",
+    "name_selector": ".productitem--title a",
+    "link_selector": ".productitem--title a",
+    "price_selector": ".price--compare-at",
+    "sale_selector": ".price--main",
+    "image_selector": ".product-image"
+  },
+  {
+    "name": "Emerald Hobbies",
+    "base_url": "https://www.emeraldhobbies.com.au/",
+    "search_url": "search?q=*&type=product",
+    "product_selector": ".category_detail",
+    "name_selector": "h4 > a",
+    "link_selector": "h4 > a",
+    "price_selector": ".compare-price",
+    "sale_selector": ".price span",
+    "image_selector": ".product-image"
+  },
+  {
+    "name": "Hobby In Scale",
+    "base_url": "https://hobbyinscale.com.au/",
+    "search_url": "search?q=*",
+    "product_selector": ".card--product",
+    "name_selector": ".card__title a",
+    "link_selector": ".card__title a",
+    "price_selector": "PENISPENISPENIS",
+    "sale_selector": ".price__current",
+    "image_selector": ".product-image"
+  },
+  {
+    "name": "Mind Games",
+    "base_url": "https://www.m-g.com.au/",
+    "search_url": "?s=*&post_type=product",
+    "product_selector": ".mg-product-inner",
+    "name_selector": ".woocommerce-loop-product__title",
+    "link_selector": ".woocommerce-loop-product__link",
+    "price_selector": "PENISPENISPENIS",
+    "sale_selector": ".woocommerce-Price-amount bdi",
+    "image_selector": ".product-image"
+  }
+]

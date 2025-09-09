@@ -1,0 +1,12 @@
+[
+  {
+    "name": "Mperor",
+    "base_url": "https://mperor.cc/",
+    "search_url": "/search?q=*",
+    "product_selector": ".product-card",
+    "name_selector": ".product-card__name",
+    "link_selector": "",
+    "price_selector": ".product-card__regular-price",
+    "sale_selector": ".product-card__price span.visually-hidden:nth-of-type(2)"
+  }
+]

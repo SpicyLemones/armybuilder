@@ -1,1 +1,1 @@
-DELETE FROM sellers
+DROP TABLE IF EXISTS sellers

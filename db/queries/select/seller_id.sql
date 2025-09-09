@@ -1,6 +1,6 @@
 SELECT
   *
 FROM
-  items
+  sellers
 WHERE
   id = ?

@@ -3,4 +3,4 @@ SELECT
 FROM
   prices
 WHERE
-  item_id = ?
+  validated IS NULL
