@@ -87,4 +87,16 @@
     "sale_selector": ".woocommerce-Price-amount bdi",
     "image_selector": ".product-image"
   }
+  ,
+    {
+    "name": "Frontline Hobbies",
+    "base_url": "https://www.frontlinehobbies.com.au/",
+    "search_url": "/search/?query=*",
+    "product_selector": ".card thumbnail card-body",
+    "name_selector": ".card-title h4",
+    "link_selector": ".thumbnail-image pb-2",
+    "price_selector": "PENISPENISPENIS",
+    "sale_selector": ".price",
+    "image_selector": ".product-image img-fluid"
+  }
 ]

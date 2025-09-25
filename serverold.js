@@ -5,8 +5,8 @@ import fs from "fs";
 import sqlite3 from "sqlite3";
 import pLimit from "p-limit";
 
-import { scrape, searchSeller } from "./client/src/scraper.js";
-import { fuzzy } from "./client/src/search.js";
+import { scrape, searchSeller } from "./src/scraper.js";
+import { fuzzy } from "./src/search.js";
 import { resolve } from "path";
 
 // https shit im too lazy to actually use this yet
@@ -18,10 +18,9 @@ var options = {
 // set up express sir
 var app = express();
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json()); // allow JSON requests too
 
 // set up sqlite sir
-const db = new sqlite3.Database("./client/src/db/data.sqlite");
+const db = new sqlite3.Database("./db/data.sqlite");
 
 // shorthand for reading files because im autistic and like little ravioli functions
 const file = (filename, encoding) => {
@@ -54,7 +53,6 @@ const query = (type, queryName, args, callback) => {
         file(`./db/queries/${queryName}.sql`, "utf8"),
         args,
         (err, row) => {
-          if (err) return rej(err);
           callback?.(row);
           res(row);
         }
@@ -64,7 +62,6 @@ const query = (type, queryName, args, callback) => {
         file(`./db/queries/${queryName}.sql`, "utf8"),
         args,
         (err, rows) => {
-          if (err) return rej(err);
           callback?.(rows);
           res(rows);
         }
@@ -74,7 +71,6 @@ const query = (type, queryName, args, callback) => {
         file(`./db/queries/${queryName}.sql`, "utf8"),
         args,
         (err, rows) => {
-          if (err) return rej(err);
           callback?.(rows);
           res(rows);
         }
@@ -83,9 +79,6 @@ const query = (type, queryName, args, callback) => {
   });
 };
 
-// ---------------------------
-// BASIC HTML FOR DEBUGGING
-// ---------------------------
 const homeButton = `
 <div>
   <form action="/" method="GET">
@@ -103,6 +96,7 @@ const searchBar = `
 </div>
 `;
 
+// database debug tool
 const debugDB = `
 <div>
   <form action="/db" method="POST">
@@ -117,44 +111,21 @@ const debugDB = `
 </div>
 `;
 
-// ---------------------------
-// FRONTEND PUBLIC API
-// ---------------------------
-
-// Get all products
-app.get("/api/products", async (req, res) => {
-  const products = await query("all", "select/all_products", []);
-  res.json(products);
-});
-
-// Get single product by id
-app.get("/api/products/:id", async (req, res) => {
-  const product = await query("get", "select/product_id", [req.params.id]);
-  if (!product) return res.status(404).json({ error: "Not found" });
-  const prices = await query("all", "select/display_prices", [product.id]);
-  res.json({ ...product, prices });
-});
-
-// Get all sellers
-app.get("/api/sellers", async (req, res) => {
-  const sellers = await query("all", "select/all_sellers", []);
-  res.json(sellers);
-});
-
-// ---------------------------
-// PUBLIC WEB PAGES (debug/demo)
-// ---------------------------
+// home page
 app.get("/", (req, res) => {
   res.send(debugDB + homeButton + searchBar);
 });
 
+// search page
 app.get("/search", (req, res) => {
+  // grab all products in the database
   query("all", "select/all_products", [], (products) => {
     var text =
       debugDB +
       homeButton +
       searchBar +
       `<div>Search query: \'${req.query.q}\'`;
+    // fuzzy search
     const results = fuzzy(
       req.query.q.trim(),
       products,
@@ -179,9 +150,12 @@ app.get("/search", (req, res) => {
 
 app.get("/product", (req, res) => {
   query("get", "select/product_id", [req.query?.q], (product) =>
+    // grab all known prices for that product from all sellers
     query("all", "select/display_prices", [product?.id], (prices) => {
+      console.log(prices);
       var text =
         debugDB + homeButton + searchBar + `<div>Product: \'${product.name}\'`;
+      // display each price from each seller as a link to the seller's page
       prices?.sort((a, b) => a.price - b.price);
       prices?.forEach((price) => {
         text +=
@@ -197,12 +171,8 @@ app.get("/product", (req, res) => {
   );
 });
 
-// ---------------------------
-// PRIVATE ADMIN (tinder tool)
-// ---------------------------
-
-// validate
 app.get("/validate", async (req, res) => {
+  console.log(req.query);
   await query("run", "update/validate_price", [
     req.query.link.trim(),
     req.query.price.trim(),
@@ -212,20 +182,18 @@ app.get("/validate", async (req, res) => {
   res.redirect("/tinder");
 });
 
-// invalidate
 app.get("/invalidate", async (req, res) => {
   await query("run", "update/invalidate_price", [req.query.s, req.query.p]);
   res.redirect("/tinder");
 });
 
-// tinder manual verification
 app.get("/tinder", async (req, res) => {
   const price = await query("get", "select/unchecked_prices");
-  if (!price) {
-    return res.send("<h2>No unchecked prices left!</h2>" + homeButton);
-  }
+  console.log(price);
   const seller = await query("get", "select/seller_id", [price.seller_id]);
+  console.log(seller);
   const product = await query("get", "select/product_id", [price.product_id]);
+  console.log(product);
   const products = await searchSeller(seller, product);
 
   const validateLink = `/validate?s=${seller.id}&p=${product.id}`;
@@ -240,6 +208,8 @@ app.get("/tinder", async (req, res) => {
     img: p.img.toString("base64"),
   }));
 
+  //imgStringProducts.sort()
+
   const text = `
     <div style="font-size: 48px;">Is this ${product.name}?</div>
     <div>
@@ -252,9 +222,9 @@ app.get("/tinder", async (req, res) => {
     <style>
       #productImage {
         display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
+        width: 100%;   /* full viewport width */
+        height: 100%;  /* full viewport height */
+        object-fit: contain; /* fill the screen, cropping if needed */
       }
     </style>
 
@@ -265,6 +235,7 @@ app.get("/tinder", async (req, res) => {
       function updateImage() {
         if (!products[count] || !products[count].img) return;
         const base64 = products[count].img;
+        console.log(base64);
         document.getElementById("productImage").src = \`data:image/jpeg;base64,\${base64}\`;
       }
 
@@ -277,7 +248,7 @@ app.get("/tinder", async (req, res) => {
       function yuck() {
         count++;
         if (count >= products.length) {
-          window.location.href="${invalidateLink}";
+          window.location.href=\"${invalidateLink}\";
         }
         else updateImage();
       }
@@ -289,32 +260,41 @@ app.get("/tinder", async (req, res) => {
   res.send(homeButton + text);
 });
 
-// ---------------------------
-// DEBUG DB
-// ---------------------------
+// debug thing for manually messing with database
 app.post("/db", (req, res) => {
   const action = req.body?.action;
-  const queryStr = req.body?.query;
+  const query = req.body?.query;
   console.log(`Received ${action} command`);
   if (action === "update") {
-    updateDB().then(() => res.redirect("/"));
+    updateDB().then(() => {
+      res.redirect("/");
+    });
   } else if (action === "clear") {
-    clearDB().then(() => res.redirect("/"));
+    clearDB().then(() => {
+      console.log("Database cleared.");
+      res.redirect("/");
+    });
   } else if (action === "setup") {
-    setupDB().then(() => res.redirect("/"));
+    setupDB().then(() => {
+      console.log("Database set up.");
+      res.redirect("/");
+    });
   } else if (action === "run") {
-    db.run(queryStr, (err) => {
+    db.run(req.query.r, (err) => {
+      console.log(query);
       if (err) console.log(`Error: ${err}`);
       res.redirect("/");
     });
   } else if (action === "log") {
-    db.get(queryStr, (err, row) => {
+    db.get(query, (err, row) => {
+      console.log(query);
       console.log(row);
       if (err) console.log(`Error: ${err}`);
       res.redirect("/");
     });
   } else if (action === "log_all") {
-    db.all(queryStr, (err, rows) => {
+    db.all(query, (err, rows) => {
+      console.log(query);
       console.log(rows);
       if (err) console.log(`Error: ${err}`);
       res.redirect("/");
@@ -322,8 +302,5 @@ app.post("/db", (req, res) => {
   } else res.json({ success: false, message: "undefined command" });
 });
 
-// ---------------------------
-// START SERVERS
-// ---------------------------
 http.createServer(app).listen(80);
 //https.createServer(options, app).listen(443);
