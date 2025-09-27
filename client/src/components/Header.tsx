@@ -19,7 +19,7 @@ export function Header() {
             src="/images/armybuilderlogo.png"
             alt="Logo"
           />
-          <span>ArmyBuilder</span>
+          <span>PriceHammer</span>
         </Link>
 
         <nav className="flex items-center gap-2">

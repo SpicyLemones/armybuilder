@@ -41,7 +41,7 @@ const query = (type, queryName, args, callback) => {
   return new Promise((res, rej) => {
     if (type === "run") {
       db.run(
-        file(`./db/queries/${queryName}.sql`, "utf8"),
+        file(`./client/src/db/queries/${queryName}.sql`, "utf8"),
         args,
         function (err) {
           if (err) return rej(err);
@@ -51,7 +51,7 @@ const query = (type, queryName, args, callback) => {
       );
     } else if (type === "get") {
       db.get(
-        file(`./db/queries/${queryName}.sql`, "utf8"),
+        file(`./client/src/db/queries/${queryName}.sql`, "utf8"),
         args,
         (err, row) => {
           if (err) return rej(err);
@@ -61,7 +61,7 @@ const query = (type, queryName, args, callback) => {
       );
     } else if (type === "all") {
       db.all(
-        file(`./db/queries/${queryName}.sql`, "utf8"),
+        file(`./client/src/db/queries/${queryName}.sql`, "utf8"),
         args,
         (err, rows) => {
           if (err) return rej(err);
@@ -71,7 +71,7 @@ const query = (type, queryName, args, callback) => {
       );
     } else if (type === "each") {
       db.each(
-        file(`./db/queries/${queryName}.sql`, "utf8"),
+        file(`./client/src/db/queries/${queryName}.sql`, "utf8"),
         args,
         (err, rows) => {
           if (err) return rej(err);
@@ -82,6 +82,59 @@ const query = (type, queryName, args, callback) => {
     }
   });
 };
+
+// -------- db stuff
+
+// initial manual data, eventually we should move this to a file but for now its jose mode bitch
+const setupDB = async () => {
+  await clearDB();
+  await query("run", "create/products");
+  await query("run", "create/prices");
+  await query("run", "create/sellers");
+
+  const sellersString = fs.readFileSync("./client/src/db/json/sellers.json");
+  const sellers = JSON.parse(sellersString);
+  console.log(sellers);
+  for (const seller of sellers) {
+    await query("run", "insert/seller", [
+      seller.name,
+      seller.base_url,
+      seller.search_url,
+      seller.product_selector,
+      seller.name_selector,
+      seller.link_selector,
+      seller.price_selector,
+      seller.sale_selector,
+      seller.image_selector,
+    ]);
+  }
+
+  const productsString = fs.readFileSync("./client/src/db/json/products.json");
+  const products = JSON.parse(productsString);
+  for (const product of products) {
+    await query("run", "insert/product", [product.name, product.search_term]);
+  }
+
+  const pricePromises = [];
+  for (let seller_i = 1; seller_i <= sellers.length; seller_i++) {
+    for (let product_i = 1; product_i <= products.length; product_i++) {
+      pricePromises.push(query("run", "insert/price", [seller_i, product_i]));
+    }
+  }
+
+  await Promise.all(pricePromises);
+};
+
+// delete everything but maintain the structure
+const clearDB = async () => {
+  await query("run", "delete/products");
+  await query("run", "delete/prices");
+  await query("run", "delete/sellers");
+};
+
+
+// --------- db 
+
 
 // ---------------------------
 // BASIC HTML FOR DEBUGGING
@@ -113,9 +166,14 @@ const debugDB = `
     <button type="submit" name="action" value="clear">Clear</button>
     <button type="submit" name="action" value="setup">Set up</button>
     <button type="submit" name="action" value="update">Update</button>
+    
+  </form>
+        <form action="/export" method="GET">
+    <button type="submit">Export DB to mockData</button>
   </form>
 </div>
 `;
+
 
 // ---------------------------
 // FRONTEND PUBLIC API
@@ -140,6 +198,96 @@ app.get("/api/sellers", async (req, res) => {
   const sellers = await query("all", "select/all_sellers", []);
   res.json(sellers);
 });
+
+
+//EXPORT KENZIE STUFF
+
+app.get("/export", async (req, res) => {
+  try {
+    const products = await query("all", "select/all_products");
+
+    const exportProducts = [];
+    for (const product of products) {
+      // fetch only validated prices for this product
+      const prices = await query("all", "select/display_prices", [product.id]);
+
+      exportProducts.push({
+        id: product.id.toString(),
+        name: product.name,
+        game: "",        // placeholder -> 'warhammer40k' | 'ageofsigmar'
+        faction: "",     // placeholder
+        category: "",    // placeholder
+        points: 0,       // placeholder
+        retailers: prices.map((p) => ({
+          store: p.seller_name,
+          price: Number(p.price), // ensure number
+          inStock: false,         // placeholder
+          url: p.link,
+        })),
+      });
+    }
+
+    // helper: JSON → TS literal (removes quotes from keys)
+    const toTsLiteral = (obj) =>
+      JSON.stringify(obj, null, 2).replace(/"([^"]+)":/g, "$1:");
+
+    const content = `// Auto-generated file from /export
+
+export interface Product {
+  id: string;
+  name: string;
+  game: string;
+  faction: string;
+  category: string;
+  points: number;
+  retailers: {
+    store: string;
+    price: number;
+    inStock: boolean;
+    url: string;
+  }[];
+}
+
+export const gameCategories = {
+  warhammer40k: [
+    'Characters',
+    'Battleline', 
+    'Dedicated Transports',
+    'Other',
+    'Fortifications'
+  ],
+  ageofsigmar: [
+    'Cavalry Heroes',
+    'Infantry Heroes', 
+    'Monster Heroes',
+    'Cavalry',
+    'Infantry',
+    'Monster',
+    'War machine',
+    'Regiment of Renown',
+    'Faction terrain',
+    'Endless spell'
+  ]
+};
+
+export const mockProducts: Product[] = ${toTsLiteral(exportProducts)};
+`;
+
+    fs.writeFileSync("./client/src/data/mockData.ts", content);
+
+    res.json({
+      status: "ok",
+      message: "Exported into client/src/data/mockData.ts",
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ status: "error", message: err.message });
+  }
+});
+
+
+
+
 
 // ---------------------------
 // PUBLIC WEB PAGES (debug/demo)

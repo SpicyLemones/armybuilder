@@ -7,3 +7,4 @@ FROM
   JOIN sellers ON prices.seller_id = sellers.id
 WHERE
   product_id = ?
+  AND validated = 1;

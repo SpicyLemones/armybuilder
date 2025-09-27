@@ -1,7 +1,9 @@
+// Auto-generated file from /export
+
 export interface Product {
   id: string;
   name: string;
-  game: 'warhammer40k' | 'ageofsigmar';
+  game: string;
   faction: string;
   category: string;
   points: number;
@@ -36,513 +38,448 @@ export const gameCategories = {
 };
 
 export const mockProducts: Product[] = [
-  // Warhammer 40k Products
   {
     id: "1",
-    name: "Captain in Terminator Armour",
+    name: "Necrons Immortals",
     game: "warhammer40k",
-    faction: "Space Marines",
-    category: "Characters",
-    points: 95,
+    faction: "Necrons",
+    category: "",
+    points: 0,
     retailers: [
       {
-        store: "Games Workshop",
-        price: 45.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 40.50,
-        inStock: true,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 38.25,
+        store: "War For Less",
+        price: 52.5,
         inStock: false,
-        url: "https://miniaturemarket.com"
-      },
-      {
-        store: "Dicehead Games",
-        price: 36.00,
-        inStock: true,
-        url: "https://diceheadgames.com"
+        url: "https://www.warforless.com.au/necrons-immortals-2020"
       }
     ]
   },
   {
     id: "2",
-    name: "Intercessor Squad",
-    game: "warhammer40k",
-    faction: "Space Marines",
-    category: "Battleline",
-    points: 90,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 65.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 58.50,
-        inStock: true,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 55.25,
-        inStock: false,
-        url: "https://miniaturemarket.com"
-      },
-      {
-        store: "Dicehead Games",
-        price: 52.00,
-        inStock: true,
-        url: "https://diceheadgames.com"
-      }
-    ]
+    name: "Infernus Squad",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "3",
-    name: "Rhino",
-    game: "warhammer40k",
-    faction: "Space Marines",
-    category: "Dedicated Transports",
-    points: 75,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 55.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 49.50,
-        inStock: true,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 46.75,
-        inStock: true,
-        url: "https://miniaturemarket.com"
-      }
-    ]
+    name: "Terminator Squad",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "4",
-    name: "Redemptor Dreadnought",
-    game: "warhammer40k",
-    faction: "Space Marines",
-    category: "Other",
-    points: 175,
+    name: "Primaris Crusader Squad",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
     retailers: [
       {
-        store: "Games Workshop",
-        price: 85.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 76.50,
-        inStock: true,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 72.25,
-        inStock: true,
-        url: "https://miniaturemarket.com"
+        store: "War For Less",
+        price: 78.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/black-templars-primaris-crusader-squad"
       }
     ]
   },
   {
     id: "5",
-    name: "Big Mek with Shokk Attack Gun",
-    game: "warhammer40k",
-    faction: "Orks",
-    category: "Characters",
-    points: 125,
+    name: "Chaos Space Marines: Chosen",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
     retailers: [
       {
-        store: "Games Workshop",
-        price: 55.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 49.50,
-        inStock: true,
-        url: "https://amazon.com"
+        store: "War For Less",
+        price: 78.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marines-chosen"
       }
     ]
   },
   {
     id: "6",
-    name: "Ork Boyz",
-    game: "warhammer40k",
-    faction: "Orks",
-    category: "Battleline",
-    points: 80,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 40.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 36.00,
-        inStock: false,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 34.00,
-        inStock: true,
-        url: "https://miniaturemarket.com"
-      }
-    ]
+    name: "Slaves to Darkness: Chaos Chosen",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "7",
-    name: "Overlord",
-    game: "warhammer40k",
-    faction: "Necrons",
-    category: "Characters",
-    points: 95,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 40.00,
-        inStock: false,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 36.00,
-        inStock: true,
-        url: "https://amazon.com"
-      }
-    ]
+    name: "Cadian Shock Troops",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "8",
-    name: "Necron Warriors",
-    game: "warhammer40k",
-    faction: "Necrons", 
-    category: "Battleline",
-    points: 120,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 60.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 54.00,
-        inStock: true,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 51.00,
-        inStock: true,
-        url: "https://miniaturemarket.com"
-      }
-    ]
+    name: "Clawlord on Gnaw-beast",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "9",
-    name: "Aegis Defence Line",
-    game: "warhammer40k",
-    faction: "Imperial",
-    category: "Fortifications",
+    name: "Arch-Warlock",
+    game: "",
+    faction: "",
+    category: "",
     points: 0,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 45.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 40.50,
-        inStock: true,
-        url: "https://amazon.com"
-      }
-    ]
+    retailers: []
   },
-
-  // Age of Sigmar Products
   {
     id: "10",
-    name: "Lord-Arcanum on Gryph-Charger",
-    game: "ageofsigmar",
-    faction: "Stormcast Eternals",
-    category: "Cavalry Heroes",
-    points: 155,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 50.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 45.00,
-        inStock: true,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 42.50,
-        inStock: false,
-        url: "https://miniaturemarket.com"
-      }
-    ]
+    name: "Clawlord",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "11",
-    name: "Knight-Incantor",
-    game: "ageofsigmar",
-    faction: "Stormcast Eternals",
-    category: "Infantry Heroes",
-    points: 125,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 35.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 31.50,
-        inStock: true,
-        url: "https://amazon.com"
-      }
-    ]
+    name: "Deathmaster",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "12",
-    name: "Stardrake",
-    game: "ageofsigmar",
-    faction: "Stormcast Eternals",
-    category: "Monster Heroes",
-    points: 500,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 150.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 135.00,
-        inStock: false,
-        url: "https://amazon.com"
-      }
-    ]
+    name: "Grey Seer",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "13",
-    name: "Liberators",
-    game: "ageofsigmar",
-    faction: "Stormcast Eternals",
-    category: "Infantry",
-    points: 115,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 60.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 54.00,
-        inStock: true,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 51.00,
-        inStock: true,
-        url: "https://miniaturemarket.com"
-      }
-    ]
+    name: "Krittok Foulblade",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "14",
-    name: "Vanguard-Hunters",
-    game: "ageofsigmar",
-    faction: "Stormcast Eternals",
-    category: "Cavalry",
-    points: 110,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 65.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 58.50,
-        inStock: true,
-        url: "https://amazon.com"
-      }
-    ]
+    name: "Master Moulder",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "15",
-    name: "Celestar Ballista",
-    game: "ageofsigmar",
-    faction: "Stormcast Eternals",
-    category: "War machine",
-    points: 140,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 45.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 40.50,
-        inStock: false,
-        url: "https://amazon.com"
-      }
-    ]
+    name: "Warlock Bombardier",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "16",
-    name: "Orruk Megaboss",
-    game: "ageofsigmar",
-    faction: "Ironjawz",
-    category: "Infantry Heroes",
-    points: 140,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 40.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 36.00,
-        inStock: true,
-        url: "https://amazon.com"
-      }
-    ]
+    name: "Warlock Engineer",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "17",
-    name: "Orruk Ardboys",
-    game: "ageofsigmar",
-    faction: "Ironjawz",
-    category: "Infantry",
-    points: 90,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 50.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 45.00,
-        inStock: false,
-        url: "https://amazon.com"
-      },
-      {
-        store: "MiniatureMarket",
-        price: 42.50,
-        inStock: true,
-        url: "https://miniaturemarket.com"
-      }
-    ]
+    name: "Warlock Galvaneer",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "18",
-    name: "Morghast Harbingers",
-    game: "ageofsigmar",
-    faction: "Ossiarch Bonereapers",
-    category: "Monster",
-    points: 210,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 70.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 63.00,
-        inStock: true,
-        url: "https://amazon.com"
-      }
-    ]
+    name: "Lord Skreech Verminking",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   },
   {
     id: "19",
-    name: "Bone Tithe Nexus",
-    game: "ageofsigmar",
-    faction: "Ossiarch Bonereapers",
-    category: "Faction terrain",
+    name: "Thanquol on Boneripper",
+    game: "",
+    faction: "",
+    category: "",
     points: 0,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 55.00,
-        inStock: false,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 49.50,
-        inStock: true,
-        url: "https://amazon.com"
-      }
-    ]
+    retailers: []
   },
   {
     id: "20",
-    name: "Purple Sun of Shyish",
-    game: "ageofsigmar",
-    faction: "Death",
-    category: "Endless spell",
-    points: 70,
-    retailers: [
-      {
-        store: "Games Workshop",
-        price: 30.00,
-        inStock: true,
-        url: "https://www.games-workshop.com"
-      },
-      {
-        store: "Amazon",
-        price: 27.00,
-        inStock: true,
-        url: "https://amazon.com"
-      }
-    ]
+    name: "Verminlord Corruptor",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "21",
+    name: "Verminlord Deceiver",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "22",
+    name: "Verminlord Warbringer",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "23",
+    name: "Verminlord Warpseer",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "24",
+    name: "Vizzik Skour, Prophet of the Horned Rat",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "25",
+    name: "Grey Seer on Screaming Bell",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "26",
+    name: "Plague Priest on Plague Furnace",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "27",
+    name: "Acolyte Globadiers",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "28",
+    name: "Clanrats",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "29",
+    name: "Night Runners",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "30",
+    name: "Plague Monks",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "31",
+    name: "Plaguepack",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "32",
+    name: "Rat Ogors",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "33",
+    name: "Ratling Gun",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "34",
+    name: "Stormfiends",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "35",
+    name: "Stormvermin",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "36",
+    name: "Warpfire Thrower",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "37",
+    name: "Warplock Jezzails",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "38",
+    name: "Warpvolt Scourgers",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "39",
+    name: "Brood Terror",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "40",
+    name: "Hell Pit Abomination",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "41",
+    name: "Doom-Flayers",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "42",
+    name: "Doomwheel",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "43",
+    name: "Plagueclaw",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "44",
+    name: "Ratling Warpblaster",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "45",
+    name: "Warp Lightning Cannon",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "46",
+    name: "Warp-Grinder",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
+  },
+  {
+    id: "47",
+    name: "Gnawhole",
+    game: "",
+    faction: "",
+    category: "",
+    points: 0,
+    retailers: []
   }
 ];
