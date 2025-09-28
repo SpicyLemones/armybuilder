@@ -169,7 +169,7 @@ const debugDB = `
     
   </form>
         <form action="/export" method="GET">
-    <button type="submit">Export DB to mockData</button>
+    <button type="submit">Export DB to Data</button>
   </form>
 </div>
 `;
@@ -218,6 +218,7 @@ app.get("/export", async (req, res) => {
         faction: "",     // placeholder
         category: "",    // placeholder
         points: 0,       // placeholder
+        image: "",       // 🔥 placeholder for image URL
         retailers: prices.map((p) => ({
           store: p.seller_name,
           price: Number(p.price), // ensure number
@@ -240,6 +241,7 @@ export interface Product {
   faction: string;
   category: string;
   points: number;
+  image: string; // 🔥 added image field
   retailers: {
     store: string;
     price: number;
@@ -273,11 +275,11 @@ export const gameCategories = {
 export const mockProducts: Product[] = ${toTsLiteral(exportProducts)};
 `;
 
-    fs.writeFileSync("./client/src/data/mockData.ts", content);
+    fs.writeFileSync("./client/src/data/Data.ts", content);
 
     res.json({
       status: "ok",
-      message: "Exported into client/src/data/mockData.ts",
+      message: "Exported into client/src/data/Data.ts",
     });
   } catch (err) {
     console.error(err);

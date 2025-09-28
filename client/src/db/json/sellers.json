@@ -44,17 +44,6 @@
     "image_selector": ".product-image"
   },
   {
-    "name": "Games Empire",
-    "base_url": "https://gamesempire.com.au/",
-    "search_url": "/search?type=article%2Cpage%2Cproduct&q=*",
-    "product_selector": ".productitem",
-    "name_selector": ".productitem--title a",
-    "link_selector": ".productitem--title a",
-    "price_selector": ".price--compare-at",
-    "sale_selector": ".price--main",
-    "image_selector": ".product-image"
-  },
-  {
     "name": "Emerald Hobbies",
     "base_url": "https://www.emeraldhobbies.com.au/",
     "search_url": "search?q=*&type=product",
@@ -65,38 +54,35 @@
     "sale_selector": ".price span",
     "image_selector": ".product-image"
   },
-  {
-    "name": "Hobby In Scale",
-    "base_url": "https://hobbyinscale.com.au/",
-    "search_url": "search?q=*",
-    "product_selector": ".card--product",
-    "name_selector": ".card__title a",
-    "link_selector": ".card__title a",
-    "price_selector": "PENISPENISPENIS",
-    "sale_selector": ".price__current",
-    "image_selector": ".product-image"
-  },
-  {
-    "name": "Mind Games",
-    "base_url": "https://www.m-g.com.au/",
-    "search_url": "?s=*&post_type=product",
-    "product_selector": ".mg-product-inner",
-    "name_selector": ".woocommerce-loop-product__title",
-    "link_selector": ".woocommerce-loop-product__link",
-    "price_selector": "PENISPENISPENIS",
-    "sale_selector": ".woocommerce-Price-amount bdi",
-    "image_selector": ".product-image"
-  }
-  ,
-    {
-    "name": "Frontline Hobbies",
-    "base_url": "https://www.frontlinehobbies.com.au/",
-    "search_url": "/search/?query=*",
-    "product_selector": ".card thumbnail card-body",
-    "name_selector": ".card-title h4",
-    "link_selector": ".thumbnail-image pb-2",
-    "price_selector": "PENISPENISPENIS",
-    "sale_selector": ".price",
-    "image_selector": ".product-image img-fluid"
-  }
+ {
+  "name": "Gumnut",
+  "base_url": "https://www.gumnut.com.au/",
+  "search_url": "search?type=product&q=*",
+
+  "product_selector": ".search-infinite-wrapper .element",
+
+  "name_selector": ".desc h5 a",
+  "link_selector": ".desc h5 a",
+
+  "price_selector": ".desc .compare-price",
+  "sale_selector": "desc .price",
+
+  "image_selector": ".product-image img"
+}
+,
+   {
+  "name": "Frontline Hobbies",
+  "base_url": "https://www.frontlinehobbies.com.au/",
+  "search_url": "/search/?query=*",
+
+  "product_selector": ".card.thumbnail.card-body",
+
+  "name_selector": ".m_caption .card-title a",
+  "link_selector": ".m_caption .card-title a",
+
+  "price_selector": ".m_caption .price [itemprop='price']",
+  "sale_selector": "",
+
+  "image_selector": "a.thumbnail-image img.product-image"
+}
 ]

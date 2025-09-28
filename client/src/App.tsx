@@ -2,6 +2,26 @@ import { Routes, Route } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { ProductLookup } from "@/components/ProductLookup";
 import { ArmyBuilder } from "@/components/ArmyBuilder";
+import { About } from "@/components/About";
+import { ContactStatic } from "@/components/ContactStatic";
+import { NotFound } from "@/components/NotFound";
+import { AppErrorBoundary } from "@/components/AppErrorBoundary";
+import { Footer } from "@/components/Footer";
+
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import { gaPageview } from "@/lib/ga";
+
+function RouteTracker() {
+  const { pathname, search } = useLocation();
+  useEffect(() => {
+    gaPageview(pathname + (search || ""));
+  }, [pathname, search]);
+  return null;
+}
+
+// In your App component JSX, just render <RouteTracker /> once (e.g., above <Routes/>)
+
 
 function DebugPage() {
   return (
@@ -14,18 +34,27 @@ function DebugPage() {
 
 export default function App() {
   return (
-    // Outer wrapper holds your background image
+    // Make the whole app a column so footer sits at bottom
     <div className="min-h-screen bg-fixed bg-cover bg-center app-bg">
-      {/* Overlay for readability */}
-      <div className="min-h-screen bg-white/60 dark:bg-black/70 backdrop-blur-sm">
+      <div className="min-h-screen bg-white/60 dark:bg-black/70 backdrop-blur-sm flex flex-col">
         <Header />
-        <main className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <Routes>
-            <Route path="/" element={<ProductLookup />} />
-            <Route path="/builder" element={<ArmyBuilder />} />
-            <Route path="/dev" element={<DebugPage />} />
-          </Routes>
+        <main className="flex-1 max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+          <AppErrorBoundary>
+            <RouteTracker/>
+            <Routes>
+              <Route path="/" element={<ProductLookup />} />
+              <Route path="/builder" element={<ArmyBuilder />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/contact" element={<ContactStatic />} />
+              {/* stub pages you can fill later */}
+              <Route path="/privacy" element={<div className="max-w-2xl mx-auto">Privacy policy TBD.</div>} />
+              <Route path="/terms" element={<div className="max-w-2xl mx-auto">Terms of use TBD.</div>} />
+              <Route path="/dev" element={<DebugPage />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AppErrorBoundary>
         </main>
+        <Footer />
       </div>
     </div>
   );

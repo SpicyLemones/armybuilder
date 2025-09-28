@@ -7,6 +7,7 @@ export interface Product {
   faction: string;
   category: string;
   points: number;
+  image: string; // 🔥 added image field
   retailers: {
     store: string;
     price: number;
@@ -45,6 +46,7 @@ export const mockProducts: Product[] = [
     faction: "Necrons",
     category: "",
     points: 0,
+    image: "https://www.warhammer.com/app/resources/catalog/product/920x950/99120110057_NECImmortalsLead.jpg?fm=webp&w=670&h=691",
     retailers: [
       {
         store: "War For Less",
@@ -61,6 +63,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -70,6 +73,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -79,6 +83,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: [
       {
         store: "War For Less",
@@ -95,6 +100,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: [
       {
         store: "War For Less",
@@ -111,6 +117,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -120,6 +127,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -129,6 +137,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -138,6 +147,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -147,6 +157,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -156,6 +167,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -165,6 +177,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -174,6 +187,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -183,6 +197,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -192,6 +207,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -201,6 +217,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -210,6 +227,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -219,6 +237,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -228,6 +247,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -237,6 +257,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -246,6 +267,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -255,6 +277,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -264,6 +287,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -273,6 +297,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -282,6 +307,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -291,6 +317,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -300,6 +327,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -309,6 +337,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -318,6 +347,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -327,6 +357,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -336,6 +367,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -345,6 +377,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -354,6 +387,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -363,6 +397,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -372,6 +407,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -381,6 +417,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -390,6 +427,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -399,6 +437,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -408,6 +447,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -417,6 +457,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -426,6 +467,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -435,6 +477,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -444,6 +487,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -453,6 +497,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -462,6 +507,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -471,6 +517,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   },
   {
@@ -480,6 +527,7 @@ export const mockProducts: Product[] = [
     faction: "",
     category: "",
     points: 0,
+    image: "",
     retailers: []
   }
 ];

@@ -1,15 +1,18 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+html { scrollbar-gutter: stable both-edge; }    
 /* Optional: your own global styles */
 body { @apply font-ui bg-slate-50 text-slate-900; }
 h1,h2,h3,.font-display { font-family: "EB Garamond", serif; }
 .app-bg {
-  background-image: url('public/images/bg.jpg');
+  background-image: url('/images/bg.jpg');
   background-size: cover;
   background-position: center;
 }
 .app-overlay {
   background: linear-gradient(to bottom, rgba(10,10,10,.35), rgba(10,10,10,.35));
 }
+
+/* When active, pad the page by the scrollbar width so nothing shifts */
+.body-fill-scrollbar-gap { padding-right: var(--sbw, 0px); }

@@ -2,15 +2,63 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React + TS</title>
+    <!-- Primary SEO -->
+    <title>Warhammer Price Tracker | PriceHammer</title>
+    <meta
+      name="description"
+      content="Compare prices for Warhammer 40k, Age of Sigmar and Kill Team across Australian retailers. Find the best deal fast."
+    />
+
+    <!-- Canonical (update domain when deployed) -->
+    <link rel="canonical" href="https://pricehammer.xyz/" />
+
+    <!-- Social -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Warhammer Price Tracker | PriceHammer" />
+    <meta
+      property="og:description"
+      content="Compare prices for Warhammer 40k, Age of Sigmar and Kill Team across AU stores."
+    />
+    <meta property="og:url" content="https://pricehammer.example/" />
+    <meta property="og:image" content="/images/social/home-og.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <!-- Favicon / PWA -->
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <!-- Structured data (JSON-LD) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "PriceHammer",
+        "url": "https://pricehammer.example/",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://pricehammer.example/?q={search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      }
+    </script>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=%VITE_GA_ID%"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){ dataLayer.push(arguments); }
+      gtag('js', new Date());
+      // SPA: we’ll send page views from React (send_page_view: false)
+      gtag('config', '%VITE_GA_ID%', { send_page_view: false });
+    </script>
   </head>
+
   <body>
     <div id="root"></div>
+    <!-- Vite entry -->
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
