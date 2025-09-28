@@ -317,7 +317,7 @@ function ProductCard({ product }: { product: ProductExtended }) {
   // thumbnail (fallback)
   const thumb =
     product.image ||
-    "https://images.seeklogo.com/logo-png/43/1/warhammer-logo-png_seeklogo-438364.png";
+    "./images/placeholder.png";
 
   return (
     <>

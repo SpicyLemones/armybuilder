@@ -20,9 +20,6 @@ function RouteTracker() {
   return null;
 }
 
-// In your App component JSX, just render <RouteTracker /> once (e.g., above <Routes/>)
-
-
 function DebugPage() {
   return (
     <div className="p-6">
@@ -34,13 +31,14 @@ function DebugPage() {
 
 export default function App() {
   return (
-    // Make the whole app a column so footer sits at bottom
-    <div className="min-h-screen bg-fixed bg-cover bg-center app-bg">
-      <div className="min-h-screen bg-white/60 dark:bg-black/70 backdrop-blur-sm flex flex-col">
+    // Full-height column so footer sits at bottom; bg fixed only on md+ for smooth mobile
+    <div className="min-h-dvh bg-scroll md:bg-fixed bg-cover bg-center app-bg">
+      <div className="min-h-dvh bg-white/60 dark:bg-black/70 backdrop-blur-sm flex flex-col">
         <Header />
-        <main className="flex-1 max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-8 py-6 w-full">
+        <RouteTracker />
+
+        <main className="flex-1 w-full max-w-screen-xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6">
           <AppErrorBoundary>
-            <RouteTracker/>
             <Routes>
               <Route path="/" element={<ProductLookup />} />
               <Route path="/builder" element={<ArmyBuilder />} />
@@ -54,6 +52,7 @@ export default function App() {
             </Routes>
           </AppErrorBoundary>
         </main>
+
         <Footer />
       </div>
     </div>

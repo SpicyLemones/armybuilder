@@ -29,14 +29,6 @@ const file = (filename, encoding) => {
 };
 
 // useful shorthand for doing sql queries
-// type is "run" for anything that doesnt require a response,
-// "get" for single row responses, "all" for all. idk what each
-// is for but i made that too in case we fucking need it idk
-// all the queries we want to use should be stored in .sql files
-// in the db/queries directory, and run using this shorthand
-// for example, if i wanna do "SELECT * FROM products" i should make
-// a db/queries/select/all_products.sql file and put that query in it
-// and then run query("all", "select/all_products"). nice very nice
 const query = (type, queryName, args, callback) => {
   return new Promise((res, rej) => {
     if (type === "run") {
@@ -84,9 +76,21 @@ const query = (type, queryName, args, callback) => {
 };
 
 // -------- db stuff
+let remainingCount = 0;
 
-// initial manual data, eventually we should move this to a file but for now its jose mode bitch
+// initialize once when server starts
+const initRemainingCount = async () => {
+  const unchecked = await query("all", "select/unchecked_prices", []);
+  remainingCount = unchecked.length;
+  console.log(`📊 Starting unchecked prices: ${remainingCount}`);
+};
+initRemainingCount();
+
+
+
 const setupDB = async () => {
+  console.log("⚙️  Setting up database... please wait.");
+
   await clearDB();
   await query("run", "create/products");
   await query("run", "create/prices");
@@ -94,7 +98,7 @@ const setupDB = async () => {
 
   const sellersString = fs.readFileSync("./client/src/db/json/sellers.json");
   const sellers = JSON.parse(sellersString);
-  console.log(sellers);
+  console.log(`📦 Importing ${sellers.length} sellers...`);
   for (const seller of sellers) {
     await query("run", "insert/seller", [
       seller.name,
@@ -111,6 +115,7 @@ const setupDB = async () => {
 
   const productsString = fs.readFileSync("./client/src/db/json/products.json");
   const products = JSON.parse(productsString);
+  console.log(`📦 Importing ${products.length} products...`);
   for (const product of products) {
     await query("run", "insert/product", [product.name, product.search_term]);
   }
@@ -123,18 +128,14 @@ const setupDB = async () => {
   }
 
   await Promise.all(pricePromises);
+  console.log("✅ Database setup complete!");
 };
 
-// delete everything but maintain the structure
 const clearDB = async () => {
   await query("run", "delete/products");
   await query("run", "delete/prices");
   await query("run", "delete/sellers");
 };
-
-
-// --------- db 
-
 
 // ---------------------------
 // BASIC HTML FOR DEBUGGING
@@ -174,18 +175,14 @@ const debugDB = `
 </div>
 `;
 
-
 // ---------------------------
 // FRONTEND PUBLIC API
 // ---------------------------
-
-// Get all products
 app.get("/api/products", async (req, res) => {
   const products = await query("all", "select/all_products", []);
   res.json(products);
 });
 
-// Get single product by id
 app.get("/api/products/:id", async (req, res) => {
   const product = await query("get", "select/product_id", [req.params.id]);
   if (!product) return res.status(404).json({ error: "Not found" });
@@ -193,42 +190,39 @@ app.get("/api/products/:id", async (req, res) => {
   res.json({ ...product, prices });
 });
 
-// Get all sellers
 app.get("/api/sellers", async (req, res) => {
   const sellers = await query("all", "select/all_sellers", []);
   res.json(sellers);
 });
 
-
-//EXPORT KENZIE STUFF
-
+// ---------------------------
+// EXPORT TO TYPESCRIPT
+// ---------------------------
 app.get("/export", async (req, res) => {
   try {
     const products = await query("all", "select/all_products");
 
     const exportProducts = [];
     for (const product of products) {
-      // fetch only validated prices for this product
       const prices = await query("all", "select/display_prices", [product.id]);
 
       exportProducts.push({
         id: product.id.toString(),
         name: product.name,
-        game: "",        // placeholder -> 'warhammer40k' | 'ageofsigmar'
-        faction: "",     // placeholder
-        category: "",    // placeholder
-        points: 0,       // placeholder
-        image: "",       // 🔥 placeholder for image URL
+        game: "",
+        faction: "",
+        category: "",
+        points: 0,
+        image: "",
         retailers: prices.map((p) => ({
           store: p.seller_name,
-          price: Number(p.price), // ensure number
-          inStock: false,         // placeholder
+          price: Number(p.price),
+          inStock: false,
           url: p.link,
         })),
       });
     }
 
-    // helper: JSON → TS literal (removes quotes from keys)
     const toTsLiteral = (obj) =>
       JSON.stringify(obj, null, 2).replace(/"([^"]+)":/g, "$1:");
 
@@ -241,7 +235,7 @@ export interface Product {
   faction: string;
   category: string;
   points: number;
-  image: string; // 🔥 added image field
+  image: string;
   retailers: {
     store: string;
     price: number;
@@ -253,14 +247,14 @@ export interface Product {
 export const gameCategories = {
   warhammer40k: [
     'Characters',
-    'Battleline', 
+    'Battleline',
     'Dedicated Transports',
     'Other',
     'Fortifications'
   ],
   ageofsigmar: [
     'Cavalry Heroes',
-    'Infantry Heroes', 
+    'Infantry Heroes',
     'Monster Heroes',
     'Cavalry',
     'Infantry',
@@ -272,7 +266,7 @@ export const gameCategories = {
   ]
 };
 
-export const mockProducts: Product[] = ${toTsLiteral(exportProducts)};
+export const Products: Product[] = ${toTsLiteral(exportProducts)};
 `;
 
     fs.writeFileSync("./client/src/data/Data.ts", content);
@@ -286,10 +280,6 @@ export const mockProducts: Product[] = ${toTsLiteral(exportProducts)};
     res.status(500).json({ status: "error", message: err.message });
   }
 });
-
-
-
-
 
 // ---------------------------
 // PUBLIC WEB PAGES (debug/demo)
@@ -350,6 +340,7 @@ app.get("/product", (req, res) => {
 // ---------------------------
 // PRIVATE ADMIN (tinder tool)
 // ---------------------------
+let lastAction = null;
 
 // validate
 app.get("/validate", async (req, res) => {
@@ -359,17 +350,38 @@ app.get("/validate", async (req, res) => {
     req.query.s.trim(),
     req.query.p.trim(),
   ]);
+  lastAction = { seller: req.query.s.trim(), product: req.query.p.trim() };
+  if (remainingCount > 0) remainingCount--; // 🔥 decrement here
   res.redirect("/tinder");
 });
 
 // invalidate
 app.get("/invalidate", async (req, res) => {
   await query("run", "update/invalidate_price", [req.query.s, req.query.p]);
+  lastAction = { seller: req.query.s.trim(), product: req.query.p.trim() };
+  if (remainingCount > 0) remainingCount--; // 🔥 decrement here
+  res.redirect("/tinder");
+});
+
+// undo (reset validated back to NULL)
+app.get("/undo", async (req, res) => {
+  if (!lastAction) {
+    return res.send("<h2>No action to undo!</h2>" + homeButton);
+  }
+
+  await query("run", "update/unvalidate_price", [
+    lastAction.seller,
+    lastAction.product,
+  ]);
+
+  console.log(`↩️ Undid last action for seller=${lastAction.seller}, product=${lastAction.product}`);
+  lastAction = null;
   res.redirect("/tinder");
 });
 
 // tinder manual verification
 app.get("/tinder", async (req, res) => {
+  
   const price = await query("get", "select/unchecked_prices");
   if (!price) {
     return res.send("<h2>No unchecked prices left!</h2>" + homeButton);
@@ -389,47 +401,94 @@ app.get("/tinder", async (req, res) => {
     ...p,
     img: p.img.toString("base64"),
   }));
+  
 
   const text = `
-    <div style="font-size: 48px;">Is this ${product.name}?</div>
-    <div>
-      <button onclick="openLink()">Link</button>
-      <button onclick="yuck()">Yuck</button>
-      <button onclick="yum()">Yum</button>
+    <div style="font-size: 48px; margin-bottom: 20px;">Is this ${product.name}?</div>
+<div style="font-size: 20px; margin-bottom: 20px; text-align:center;">
+    Remaining unchecked prices: ${remainingCount}
+  </div>
+    <div style="text-align: center; margin-bottom: 10px;">
+      <a id="productLink" href="${products[0].link}" target="_blank" style="font-size: 20px; color: #3498db; text-decoration: underline;">
+        ${products[0].link}
+      </a>
     </div>
-    <img id="productImage">
+
+    <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; margin-bottom: 20px;">
+      <button class="yuckBtn" onclick="yuck()">❌ Yuck</button>
+      <img id="productImage">
+      <button class="yumBtn" onclick="yum()">✅ Yum</button>
+    </div>
+
+    <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 20px;">
+      <button class="backBtn" onclick="window.location.href='/undo'">⬅ Undo Last</button>
+    </div>
 
     <style>
+      button {
+        font-size: 22px;
+        font-weight: bold;
+        padding: 12px 24px;
+        border-radius: 10px;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .yuckBtn {
+        background-color: #e74c3c;
+        color: white;
+      }
+      .yuckBtn:hover { background-color: #c0392b; }
+
+      .yumBtn {
+        background-color: #2ecc71;
+        color: white;
+      }
+      .yumBtn:hover { background-color: #27ae60; }
+
+      .backBtn {
+        background-color: #f1c40f;
+        color: black;
+      }
+      .backBtn:hover { background-color: #d4ac0d; }
+
       #productImage {
         display: block;
         width: 100%;
-        height: 100%;
+        height: auto;
+        max-width: 70vw;
+        max-height: 80vh;
         object-fit: contain;
+        border: 2px solid #ddd;
+        border-radius: 12px;
+        margin: 0 auto;
       }
     </style>
 
     <script>
       let count = 0;
       const products = ${JSON.stringify(imgStringProducts)};
-      
+
       function updateImage() {
-        if (!products[count] || !products[count].img) return;
-        const base64 = products[count].img;
-        document.getElementById("productImage").src = \`data:image/jpeg;base64,\${base64}\`;
+        if (!products[count]) return;
+
+        if (products[count].img) {
+          const base64 = products[count].img;
+          document.getElementById("productImage").src = \`data:image/jpeg;base64,\${base64}\`;
+        }
+
+        if (products[count].link) {
+          const linkEl = document.getElementById("productLink");
+          linkEl.href = products[count].link;
+          linkEl.textContent = products[count].link;
+        }
       }
 
       updateImage();
 
-      function openLink() {
-        window.open(products[count].link, '_blank');
-      }
-
       function yuck() {
-        count++;
-        if (count >= products.length) {
-          window.location.href="${invalidateLink}";
-        }
-        else updateImage();
+        window.location.href="${invalidateLink}";
       }
 
       function yum() {

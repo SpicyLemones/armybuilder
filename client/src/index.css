@@ -16,3 +16,7 @@ h1,h2,h3,.font-display { font-family: "EB Garamond", serif; }
 
 /* When active, pad the page by the scrollbar width so nothing shifts */
 .body-fill-scrollbar-gap { padding-right: var(--sbw, 0px); }
+
+/* Hide scrollbars for small horizontal scrollers (purely cosmetic) */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
