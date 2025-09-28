@@ -74,7 +74,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 57.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/genestealer-cults-aberrants"
+      }
+    ]
   },
   {
     id: "4",
@@ -84,7 +91,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 34.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/genestealer-cults-abominant"
+      }
+    ]
   },
   {
     id: "5",
@@ -94,7 +108,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 75,
+        inStock: false,
+        url: "https://www.warforless.com.au/legion-imperialis-mechanicum-acastus-knights-aster"
+      }
+    ]
   },
   {
     id: "6",
@@ -2207,7 +2228,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 113,
+        inStock: false,
+        url: "https://www.warforless.com.au/~13534897"
+      }
+    ]
   },
   {
     id: "141",
@@ -2217,7 +2245,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 32.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/csm-chaos-lord-in-terminator-armour"
+      }
+    ]
   },
   {
     id: "142",
@@ -2227,7 +2262,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 56,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marines-lord-with-jump-pack"
+      }
+    ]
   },
   {
     id: "143",
@@ -2237,7 +2279,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 86,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marine-predator"
+      }
+    ]
   },
   {
     id: "144",
@@ -2257,7 +2306,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 52.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marines-rhino-2019"
+      }
+    ]
   },
   {
     id: "146",
@@ -2267,7 +2323,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 41.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marines-sorcerer"
+      }
+    ]
   },
   {
     id: "147",
@@ -2277,7 +2340,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 56,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marines-chaos-lord~91067660"
+      }
+    ]
   },
   {
     id: "148",
@@ -2287,7 +2357,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 52.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/slaves-to-darkness-chaos-spawn"
+      }
+    ]
   },
   {
     id: "149",
@@ -2307,7 +2384,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 90,
+        inStock: false,
+        url: "https://www.warforless.com.au/~97337621"
+      }
+    ]
   },
   {
     id: "151",
@@ -2337,7 +2421,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 67.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/black-templars-grimaldus-retinue"
+      }
+    ]
   },
   {
     id: "154",
@@ -2347,7 +2438,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 57.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/s-marines-chaplain-in-terminator-armour"
+      }
+    ]
   },
   {
     id: "155",
@@ -2357,7 +2455,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 67.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/space-marines-primaris-chaplain-on-bike"
+      }
+    ]
   },
   {
     id: "156",
@@ -2377,7 +2482,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 57.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/ultramarines-chief-librarian-tigurius"
+      }
+    ]
   },
   {
     id: "158",
@@ -2387,7 +2499,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 59.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/chimera"
+      }
+    ]
   },
   {
     id: "159",
@@ -2407,7 +2526,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 110,
+        inStock: false,
+        url: "https://www.warforless.com.au/~18205526"
+      }
+    ]
   },
   {
     id: "161",
@@ -2417,7 +2543,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 50.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/necrons-chronomancer"
+      }
+    ]
   },
   {
     id: "162",
@@ -2427,7 +2560,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 36,
+        inStock: false,
+        url: "https://www.warforless.com.au/citadel-skulls"
+      }
+    ]
   },
   {
     id: "163",
@@ -2437,7 +2577,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 34.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/genestealer-cults-clamavus"
+      }
+    ]
   },
   {
     id: "164",
@@ -2447,7 +2594,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 42,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-supplement-black-templars"
+      }
+    ]
   },
   {
     id: "165",
@@ -2457,7 +2611,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 42,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-supplement-blood-angels"
+      }
+    ]
   },
   {
     id: "166",
@@ -2467,7 +2628,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 41.6,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-supplement-dark-angels"
+      }
+    ]
   },
   {
     id: "167",
@@ -2477,7 +2645,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 42,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-supplement-space-wolves"
+      }
+    ]
   },
   {
     id: "168",
@@ -2487,7 +2662,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-adepta-sororitas-2021"
+      }
+    ]
   },
   {
     id: "169",
@@ -2497,7 +2679,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-adeptus-custodes"
+      }
+    ]
   },
   {
     id: "170",
@@ -2507,7 +2696,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-adeptus-mechanicus"
+      }
+    ]
   },
   {
     id: "171",
@@ -2517,7 +2713,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-aeldari"
+      }
+    ]
   },
   {
     id: "172",
@@ -2537,7 +2740,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-astra-militarum"
+      }
+    ]
   },
   {
     id: "174",
@@ -2547,7 +2757,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-chaos-knights-2022"
+      }
+    ]
   },
   {
     id: "175",
@@ -2557,7 +2774,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-chaos-space-marines"
+      }
+    ]
   },
   {
     id: "176",
@@ -2567,7 +2791,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-death-guard"
+      }
+    ]
   },
   {
     id: "177",
@@ -2577,7 +2808,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 78,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-drukhari"
+      }
+    ]
   },
   {
     id: "178",
@@ -2597,7 +2835,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 65,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-emperors-children"
+      }
+    ]
   },
   {
     id: "180",
@@ -2607,7 +2852,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-genestealer-cults"
+      }
+    ]
   },
   {
     id: "181",
@@ -2617,7 +2869,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-grey-knights"
+      }
+    ]
   },
   {
     id: "182",
@@ -2627,7 +2886,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-imperial-agents"
+      }
+    ]
   },
   {
     id: "183",
@@ -2637,7 +2903,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-imperial-knights"
+      }
+    ]
   },
   {
     id: "184",
@@ -2657,7 +2930,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-leagues-of-votann-english"
+      }
+    ]
   },
   {
     id: "186",
@@ -2667,7 +2947,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-necrons-2020"
+      }
+    ]
   },
   {
     id: "187",
@@ -2677,7 +2964,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-orks"
+      }
+    ]
   },
   {
     id: "188",
@@ -2687,7 +2981,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-space-marines-2020"
+      }
+    ]
   },
   {
     id: "189",
@@ -2697,7 +2998,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-tau-empire"
+      }
+    ]
   },
   {
     id: "190",
@@ -2707,7 +3015,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-thousand-sons-hb"
+      }
+    ]
   },
   {
     id: "191",
@@ -2717,7 +3032,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-tyranids-2022"
+      }
+    ]
   },
   {
     id: "192",
@@ -2727,7 +3049,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-world-eaters~135329923"
+      }
+    ]
   },
   {
     id: "193",
@@ -2737,7 +3066,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 201,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-adepta-sororitas~62373078"
+      }
+    ]
   },
   {
     id: "194",
@@ -2747,7 +3083,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 73.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/codex-adeptus-custodes"
+      }
+    ]
   },
   {
     id: "195",
@@ -2757,7 +3100,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 201,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-adeptus-mechanicus~31288849"
+      }
+    ]
   },
   {
     id: "196",
@@ -2767,7 +3117,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-aeldari~120334696"
+      }
+    ]
   },
   {
     id: "197",
@@ -2777,7 +3134,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-astra-militarum~114931308"
+      }
+    ]
   },
   {
     id: "198",
@@ -2787,7 +3151,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 203,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-black-templars"
+      }
+    ]
   },
   {
     id: "199",
@@ -2797,7 +3168,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-blood-angels~89793478"
+      }
+    ]
   },
   {
     id: "200",
@@ -2807,7 +3185,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-chaos-space-marines~57422395"
+      }
+    ]
   },
   {
     id: "201",
@@ -2817,7 +3202,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 201,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-dark-angels~49209283"
+      }
+    ]
   },
   {
     id: "202",
@@ -2827,7 +3219,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-death-guard~135329920"
+      }
+    ]
   },
   {
     id: "203",
@@ -2837,7 +3236,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 214,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-death-korps-of-krieg"
+      }
+    ]
   },
   {
     id: "204",
@@ -2847,7 +3253,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 178.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-drukhari"
+      }
+    ]
   },
   {
     id: "205",
@@ -2857,7 +3270,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-emperors-children"
+      }
+    ]
   },
   {
     id: "206",
@@ -2867,7 +3287,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 201,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-genestealer-cults~62373077"
+      }
+    ]
   },
   {
     id: "207",
@@ -2877,7 +3304,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 191,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-grey-knights~160949085"
+      }
+    ]
   },
   {
     id: "208",
@@ -2887,7 +3321,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-imperial-agents"
+      }
+    ]
   },
   {
     id: "209",
@@ -2897,7 +3338,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-imperial-fists"
+      }
+    ]
   },
   {
     id: "210",
@@ -2907,7 +3355,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-leagues-of-votann~165069079"
+      }
+    ]
   },
   {
     id: "211",
@@ -2917,7 +3372,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 201,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-necrons-2023"
+      }
+    ]
   },
   {
     id: "212",
@@ -2927,7 +3389,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 196.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/~52681867"
+      }
+    ]
   },
   {
     id: "213",
@@ -2937,7 +3406,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-raven-guard"
+      }
+    ]
   },
   {
     id: "214",
@@ -2947,7 +3423,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-salamanders"
+      }
+    ]
   },
   {
     id: "215",
@@ -2957,7 +3440,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 252,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-space-marines~68718021"
+      }
+    ]
   },
   {
     id: "216",
@@ -2967,7 +3457,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-space-wolves~160949088"
+      }
+    ]
   },
   {
     id: "217",
@@ -2977,7 +3474,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-thousand-sons~141039942"
+      }
+    ]
   },
   {
     id: "218",
@@ -2987,7 +3491,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 191,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-tyranid-assault-brood"
+      }
+    ]
   },
   {
     id: "219",
@@ -2997,7 +3508,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 176.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-tau-empire~57422401"
+      }
+    ]
   },
   {
     id: "220",
@@ -3007,7 +3525,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 210,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-world-eaters~135329921"
+      }
+    ]
   },
   {
     id: "221",
@@ -3017,7 +3542,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 58,
+        inStock: false,
+        url: "https://www.warforless.com.au/blood-angels-commander-dante"
+      }
+    ]
   },
   {
     id: "222",
@@ -3027,7 +3559,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 82.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/tau-empire-commander-farsight~11264323"
+      }
+    ]
   },
   {
     id: "223",
@@ -3037,7 +3576,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 67.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/tau-empire-commander-shadowsun"
+      }
+    ]
   },
   {
     id: "224",
@@ -3047,7 +3593,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 48,
+        inStock: false,
+        url: "https://www.warforless.com.au/astra-militarum-commissar"
+      }
+    ]
   },
   {
     id: "225",
@@ -3057,7 +3610,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 82.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/space-marines-company-heroes"
+      }
+    ]
   },
   {
     id: "226",
@@ -3067,7 +3627,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 78.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/legiones-astartes-contemptor-dreadnought"
+      }
+    ]
   },
   {
     id: "227",
@@ -3077,7 +3644,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 82.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/necrons-convergence-of-dominion"
+      }
+    ]
   },
   {
     id: "228",
@@ -3087,7 +3661,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 101.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/deathwatch-corvus-blackstar-2020"
+      }
+    ]
   },
   {
     id: "229",
@@ -3097,7 +3678,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 36,
+        inStock: false,
+        url: "https://www.warforless.com.au/citadel-creeping-vines"
+      }
+    ]
   },
   {
     id: "230",
@@ -3107,7 +3695,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 71.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/aeldari-hemlock-wraithfighter"
+      }
+    ]
   },
   {
     id: "231",
@@ -3117,7 +3712,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 56,
+        inStock: false,
+        url: "https://www.warforless.com.au/black-templars-crusade-ancient"
+      }
+    ]
   },
   {
     id: "232",
@@ -3127,7 +3729,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/warhammer-40000-crusade-armageddon"
+      }
+    ]
   },
   {
     id: "233",
@@ -3137,7 +3746,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 74,
+        inStock: false,
+        url: "https://www.warforless.com.au/nachmund-gauntlet-crusade-campaign"
+      }
+    ]
   },
   {
     id: "234",
@@ -3147,7 +3763,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 47.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/necrons-cryptek-2020"
+      }
+    ]
   },
   {
     id: "235",
@@ -3157,7 +3780,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 78.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/leagues-of-votann-cthonian-berserks"
+      }
+    ]
   },
   {
     id: "236",
@@ -3167,7 +3797,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 71,
+        inStock: false,
+        url: "https://www.warforless.com.au/leagues-of-votann-cthonian-earthshakers"
+      }
+    ]
   },
   {
     id: "237",
@@ -3177,7 +3814,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 47,
+        inStock: false,
+        url: "https://www.warforless.com.au/officio-assassinorum-culexus-assassin"
+      }
+    ]
   },
   {
     id: "238",
@@ -3187,7 +3831,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 51,
+        inStock: false,
+        url: "https://www.warforless.com.au/~88631577"
+      }
+    ]
   },
   {
     id: "239",
@@ -3197,7 +3848,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 78.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/custodian-guard-squad"
+      }
+    ]
   },
   {
     id: "240",
@@ -3207,7 +3865,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 78.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/custodian-wardens"
+      }
+    ]
   },
   {
     id: "241",
@@ -3227,7 +3892,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 57,
+        inStock: false,
+        url: "https://www.warforless.com.au/~10024401"
+      }
+    ]
   },
   {
     id: "243",
@@ -3237,7 +3909,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 108.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/slaves-to-darkness-daemon-prince"
+      }
+    ]
   },
   {
     id: "244",
@@ -3247,7 +3926,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 45.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/daemons-of-slaanesh-daemonettes"
+      }
+    ]
   },
   {
     id: "245",
@@ -3267,7 +3953,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 93.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/orks-dakkajet"
+      }
+    ]
   },
   {
     id: "247",
@@ -3277,7 +3970,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 31,
+        inStock: false,
+        url: "https://www.warforless.com.au/~28175180"
+      }
+    ]
   },
   {
     id: "248",
@@ -3287,7 +3987,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 42.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/dark-angels-upgrades-and-transfers"
+      }
+    ]
   },
   {
     id: "249",
@@ -3297,7 +4004,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 50.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marines-dark-apostle"
+      }
+    ]
   },
   {
     id: "250",
@@ -3307,7 +4021,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 70.9,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marines-dark-commune"
+      }
+    ]
   },
   {
     id: "251",
@@ -3317,7 +4038,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 78.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/aeldari-dark-reapers"
+      }
+    ]
   },
   {
     id: "252",
@@ -3327,7 +4055,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 47.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/tau-empire-darkstrider"
+      }
+    ]
   },
   {
     id: "253",
@@ -3337,7 +4072,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 58,
+        inStock: false,
+        url: "https://www.warforless.com.au/imperial-fists-darnath-lysander"
+      }
+    ]
   },
   {
     id: "254",
@@ -3347,7 +4089,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 42,
+        inStock: false,
+        url: "https://www.warforless.com.au/datasheet-cards-drukhari"
+      }
+    ]
   },
   {
     id: "255",
@@ -3357,7 +4106,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 42,
+        inStock: false,
+        url: "https://www.warforless.com.au/datasheet-cards-grey-knights"
+      }
+    ]
   },
   {
     id: "256",
@@ -3367,7 +4123,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 32,
+        inStock: false,
+        url: "https://www.warforless.com.au/datasheet-cards-imperial-knights"
+      }
+    ]
   },
   {
     id: "257",
@@ -3377,7 +4140,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 42,
+        inStock: false,
+        url: "https://www.warforless.com.au/datacards-leagues-of-votann-english"
+      }
+    ]
   },
   {
     id: "258",
@@ -3387,7 +4157,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 26.6,
+        inStock: false,
+        url: "https://www.warforless.com.au/harlequin-death-jester"
+      }
+    ]
   },
   {
     id: "259",
@@ -3397,7 +4174,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 214,
+        inStock: false,
+        url: "https://www.warforless.com.au/combat-patrol-death-korps-of-krieg"
+      }
+    ]
   },
   {
     id: "260",
@@ -3407,7 +4191,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 79,
+        inStock: false,
+        url: "https://www.warforless.com.au/astra-militarum-death-riders"
+      }
+    ]
   },
   {
     id: "261",
@@ -3417,7 +4208,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 78.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/tyranids-deathleaper"
+      }
+    ]
   },
   {
     id: "262",
@@ -3437,7 +4235,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 88,
+        inStock: false,
+        url: "https://www.warforless.com.au/~6945208"
+      }
+    ]
   },
   {
     id: "264",
@@ -3447,7 +4252,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 19.9,
+        inStock: false,
+        url: "https://www.warforless.com.au/deathwatch-upgrades-2020"
+      }
+    ]
   },
   {
     id: "265",
@@ -3457,7 +4269,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 90,
+        inStock: false,
+        url: "https://www.warforless.com.au/dark-angels-deathwing-knights"
+      }
+    ]
   },
   {
     id: "266",
@@ -3467,7 +4286,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 85,
+        inStock: false,
+        url: "https://www.warforless.com.au/orks-deff-dread"
+      }
+    ]
   },
   {
     id: "267",
@@ -3477,7 +4303,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 66.8,
+        inStock: false,
+        url: "https://www.warforless.com.au/orks-deffkilla-wartrike~3807383"
+      }
+    ]
   },
   {
     id: "268",
@@ -3487,7 +4320,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 82.5,
+        inStock: false,
+        url: "https://www.warforless.com.au/orks-deffkoptas"
+      }
+    ]
   },
   {
     id: "269",
@@ -3497,7 +4337,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 112,
+        inStock: false,
+        url: "https://www.warforless.com.au/chaos-space-marines-defiler"
+      }
+    ]
   },
   {
     id: "270",
@@ -3507,7 +4354,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 75,
+        inStock: false,
+        url: "https://www.warforless.com.au/space-marines-desolation-squad"
+      }
+    ]
   },
   {
     id: "271",
@@ -3517,7 +4371,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 72,
+        inStock: false,
+        url: "https://www.warforless.com.au/space-marines-devastator-squad-2020"
+      }
+    ]
   },
   {
     id: "272",
@@ -3527,7 +4388,14 @@ export const Products: Product[] = [
     category: "",
     points: 0,
     image: "",
-    retailers: []
+    retailers: [
+      {
+        store: "War For Less",
+        price: 59.3,
+        inStock: false,
+        url: "https://www.warforless.com.au/tau-empire-devilfish"
+      }
+    ]
   },
   {
     id: "273",
