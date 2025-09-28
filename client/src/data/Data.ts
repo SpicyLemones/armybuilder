@@ -1697,7 +1697,7 @@ export const Products: Product[] = [
     faction: "",
     category: "",
     points: 0,
-    image: "",
+    image: "https://www.gapgames.com.au/cdn/shop/files/astra-militarum-cadian-command-squad-gap-games_grande.webp?v=1739208652",
     retailers: [
       {
         store: "War For Less",
