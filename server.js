@@ -13,6 +13,9 @@ import { resolve } from "path";
 import puppeteer from "puppeteer-extra";
 import StealthPlugin from "puppeteer-extra-plugin-stealth";
 
+// 👉 allow your Vite frontend / other tools to call these endpoints
+import cors from "cors";
+
 // https shit im too lazy to actually use this yet
 var options = {
   key: fs.readFileSync("key.pem"),
@@ -23,6 +26,7 @@ var options = {
 var app = express();
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json()); // allow JSON requests too
+app.use(cors({ origin: "*" })); // loosen if you want to lock to your domain
 
 // set up sqlite sir
 const db = new sqlite3.Database("./client/src/db/data.sqlite");
@@ -84,7 +88,7 @@ let remainingCount = 0;
 
 // initialize once when server starts
 const initRemainingCount = async () => {
-  // expect this query to return ONLY rows with validated IS NULL
+  // this returns ALL unchecked rows; we just take .length for the counter
   const unchecked = await query("all", "select/count_unsorted", []);
   remainingCount = unchecked.length;
   console.log(`📊 Starting unchecked prices: ${remainingCount}`);
@@ -139,6 +143,72 @@ const clearDB = async () => {
   await query("run", "delete/prices");
   await query("run", "delete/sellers");
 };
+
+
+// Simple form page (prefilled if /product passes query params)
+app.get("/report-by-link", (req, res) => {
+  const link = String(req.query.link || "");
+  const productName = String(req.query.productName || "");
+  const sellerName = String(req.query.sellerName || "");
+
+  const html = `
+    <div style="max-width:640px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+      <a href="/"><button>⬅ Home</button></a>
+      <h2>Report wrong price/link</h2>
+      <form method="POST" action="/report-wrong-by-link" style="display:flex; flex-direction:column; gap:8px; max-width:520px;">
+        <label>Item Link
+          <input name="link" value="${link}" placeholder="https://store.example.com/item/123" required />
+        </label>
+        <label>Reason (optional)
+          <textarea name="reason" rows="4" placeholder="What’s wrong? e.g., wrong kit, OOS page, etc."></textarea>
+        </label>
+        <div style="font-size:14px;color:#666;">
+          ${sellerName ? `Seller: ${sellerName}` : ""} ${productName ? ` — Product: ${productName}` : ""}
+        </div>
+        <button type="submit" style="width:220px; padding:10px; background:#e74c3c; color:#fff; border:none; border-radius:8px;">
+          Invalidate by Link
+        </button>
+      </form>
+    </div>
+  `;
+  res.send(html);
+});
+
+// POST: invalidate any rows that match this link (validated = 0)
+app.post("/report-wrong-by-link", async (req, res) => {
+  const link = (req.body?.link ?? req.query?.link ?? "").toString().trim();
+  const reason = (req.body?.reason ?? req.query?.reason ?? "").toString().trim();
+  if (!link) return res.status(400).send("link is required");
+
+  try {
+    // optional logging (safe to attempt)
+    try {
+      await query("run", "create/bug_reports");
+      await query("run", "insert/bug_report_minimal", [link, reason || null]);
+    } catch {}
+
+    // invalidate all rows for this link
+    await query("run", "update/unvalidate_by_link", [link]);
+
+    // refresh counter used on homepage/admin
+    const unchecked = await query("all", "select/count_unsorted", []);
+    remainingCount = unchecked.length;
+
+    res.send(`
+      <div style="max-width:640px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+        <p>Thanks! We invalidated any row with this link (it won't show in Tinder again):</p>
+        <p style="word-break:break-all;"><code>${link}</code></p>
+        <div style="display:flex; gap:8px;">
+          <a href="/"><button>Home</button></a>
+          <a href="/admin"><button>Admin Panel</button></a>
+        </div>
+      </div>
+    `);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Failed to invalidate by link.");
+  }
+});
 
 // ---------------------------
 // BASIC HTML FOR DEBUGGING
@@ -288,15 +358,25 @@ export const Products: Product[] = ${toTsLiteral(exportProducts)};
 // PUBLIC WEB PAGES (debug/demo)
 // ---------------------------
 app.get("/", (req, res) => {
-  res.send(debugDB + homeButton + searchBar);
+  res.send(
+    `<div style="max-width:900px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+      <h1 style="margin:0 0 12px 0;">Pricehammer — Debug</h1>
+      <div style="margin-bottom:16px;color:#555;">Remaining unchecked prices: <b>${remainingCount}</b></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;">
+        <a href="/tinder"><button>Tinder</button></a>
+        <a href="/admin"><button>Admin Panel</button></a>
+        <a href="/export"><button>Export to Data.ts</button></a>
+      </div>
+      ${debugDB}
+      ${searchBar}
+    </div>`
+  );
 });
 
 app.get("/search", (req, res) => {
   query("all", "select/all_products", [], (products) => {
     var text =
-      debugDB +
-      homeButton +
-      searchBar +
+      `<div style="max-width:900px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">` +
       `<div>Search query: \'${req.query.q}\'`;
     const results = fuzzy(
       req.query.q.trim(),
@@ -315,7 +395,7 @@ app.get("/search", (req, res) => {
     } else {
       text += "<div>No results</div>";
     }
-    text += "</div>";
+    text += "</div></div>";
     res.send(text);
   });
 });
@@ -323,22 +403,34 @@ app.get("/search", (req, res) => {
 app.get("/product", (req, res) => {
   query("get", "select/product_id", [req.query?.q], (product) =>
     query("all", "select/display_prices", [product?.id], (prices) => {
-      var text =
-        debugDB + homeButton + searchBar + `<div>Product: \'${product.name}\'`;
-      prices?.sort((a, b) => a.price - b.price);
+      let html =
+        `<div style="max-width:900px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">` +
+        `<h2 style="margin-top:0;">Product: '${product.name}'</h2>`;
+
+      prices?.sort((a, b) => (a.price ?? Infinity) - (b.price ?? Infinity));
       prices?.forEach((price) => {
-        text +=
-          `<div><a href=\'${price.link}\'>` +
-          price.seller_name +
-          " price: " +
-          price.price +
-          "</a></div>";
+        const link = price.link || "";
+        const reportHref = `/report-by-link?` +
+          `link=${encodeURIComponent(link)}` +
+          `&productName=${encodeURIComponent(product.name)}` +
+          `&sellerName=${encodeURIComponent(price.seller_name)}`;
+
+        html += `
+          <div style="margin:6px 0;">
+            <a href="${link}" target="_blank" rel="noopener">
+              ${price.seller_name} — price: ${price.price ?? "—"}
+            </a>
+            <a href="${reportHref}" style="margin-left:12px;color:#e74c3c;">Report wrong</a>
+          </div>`;
       });
-      text += "</div>";
-      res.send(text);
+
+      html += `<div style="margin-top:16px;"><a href="/admin"><button>Admin Panel</button></a></div>`;
+      html += "</div>";
+      res.send(html);
     })
   );
 });
+
 
 // ---------------------------
 // PRIVATE ADMIN (tinder tool)
@@ -385,116 +477,116 @@ app.get("/undo", async (req, res) => {
   res.redirect("/tinder");
 });
 
+async function invalidatePairAndCount(sellerId, productId) {
+  await query("run", "update/invalidate_price", [sellerId, productId]);
+  // refresh the in-memory counter so the number on pages is correct
+  const unchecked = await query("all", "select/count_unsorted", []);
+  remainingCount = unchecked.length;
+}
+
+
+
 // tinder manual verification
 app.get("/tinder", async (req, res) => {
+  // grab one NULL row
   const price = await query("get", "select/unchecked_prices");
   if (!price) {
     return res.send("<h2>No unchecked prices left!</h2>" + homeButton);
   }
 
-  const seller = await query("get", "select/seller_id", [price.seller_id]);
+  const seller  = await query("get", "select/seller_id", [price.seller_id]);
   const product = await query("get", "select/product_id", [price.product_id]);
+
+  // search candidates
   const candidates = await searchSeller(seller, product);
 
-  const validateLink = `/validate?s=${seller.id}&p=${product.id}`;
-  const invalidateLink = `/invalidate?s=${seller.id}&p=${product.id}`;
+  // filter to “usable” (has a link)
+  const usable = (candidates || []).filter(c => !!c.link);
 
-  if (!candidates || candidates.length === 0) {
-    return res.redirect(invalidateLink);
+  // 🔥 If no candidates (or none usable), auto-invalidate this pair and move on
+  if (!usable.length) {
+    await invalidatePairAndCount(seller.id, product.id);
+    return res.redirect("/tinder");
   }
 
-  // convert Buffers to base64 strings (null-safe)
-  const imgStringProducts = candidates.map((c) => ({
+  // buffers → base64 strings (null-safe)
+  const imgStringProducts = usable.map((c) => ({
     link: c.link || "",
     price: c.price ?? "",
     img: c.img ? c.img.toString("base64") : "",
   }));
 
-  const firstLink = imgStringProducts[0]?.link || "#";
+  const validateLink   = `/validate?s=${seller.id}&p=${product.id}`;
+  const invalidateLink = `/invalidate?s=${seller.id}&p=${product.id}`;
+  const firstLink      = imgStringProducts[0]?.link || "#";
 
-  const text = `
-    <div style="font-size: 48px; margin-bottom: 12px;">Is this ${product.name}?</div>
-    <div style="font-size: 20px; margin-bottom: 16px; text-align:center;">
-      Remaining unchecked prices: ${remainingCount}
-    </div>
+  const html = `
+    <div style="max-width:900px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+      <div style="font-size: 48px; margin-bottom: 12px;">Is this ${product.name}?</div>
+      <div style="font-size: 20px; margin-bottom: 16px; text-align:center;">
+        Remaining unchecked prices: ${remainingCount}
+      </div>
 
-    <div style="text-align: center; margin-bottom: 10px;">
-      <a id="productLink" href="${firstLink}" target="_blank"
-         style="font-size: 20px; color: #3498db; text-decoration: underline;">${firstLink}</a>
-    </div>
+      <div style="text-align: center; margin-bottom: 10px;">
+        <a id="productLink" href="${firstLink}" target="_blank"
+          style="font-size: 20px; color: #3498db; text-decoration: underline;">${firstLink}</a>
+      </div>
 
-    <div style="display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:20px;">
-      <button class="yuckBtn" onclick="yuck()">❌ Yuck</button>
-      <img id="productImage" />
-      <button class="yumBtn" onclick="yum()">✅ Yum</button>
-    </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; gap:20px; margin-bottom:20px;">
+        <button class="yuckBtn" onclick="yuck()">❌ Yuck</button>
+        <img id="productImage" />
+        <button class="yumBtn" onclick="yum()">✅ Yum</button>
+      </div>
 
-    <div style="display:flex; justify-content:center; gap:12px; margin-bottom:20px;">
-      <button class="backBtn" onclick="window.location.href='/undo'">⬅ Undo Last</button>
-    </div>
+      <div style="display:flex; justify-content:center; gap:12px; margin-bottom:20px;">
+        <button class="backBtn" onclick="window.location.href='/undo'">⬅ Undo Last</button>
+      </div>
 
-    <style>
-      button { font-size:22px; font-weight:bold; padding:12px 24px; border-radius:10px; border:none; cursor:pointer; transition:all .2s; }
-      .yuckBtn { background:#e74c3c; color:#fff; } .yuckBtn:hover{ background:#c0392b; }
-      .yumBtn  { background:#2ecc71; color:#fff; } .yumBtn:hover { background:#27ae60; }
-      .backBtn { background:#f1c40f; color:#000; } .backBtn:hover{ background:#d4ac0d; }
+      <style>
+        button { font-size:22px; font-weight:bold; padding:12px 24px; border-radius:10px; border:none; cursor:pointer; transition:all .2s; }
+        .yuckBtn { background:#e74c3c; color:#fff; } .yuckBtn:hover{ background:#c0392b; }
+        .yumBtn  { background:#2ecc71; color:#fff; } .yumBtn:hover { background:#27ae60; }
+        .backBtn { background:#f1c40f; color:#000; } .backBtn:hover{ background:#d4ac0d; }
+        #productImage { display:block; width:100%; height:auto; max-width:70vw; max-height:80vh; object-fit:contain; border:2px solid #ddd; border-radius:12px; margin:0 auto; }
+      </style>
 
-      #productImage {
-        display:block; width:100%; height:auto;
-        max-width:70vw; max-height:80vh;
-        object-fit:contain; border:2px solid #ddd; border-radius:12px; margin:0 auto;
-      }
-    </style>
+      <script>
+        const products = ${JSON.stringify(imgStringProducts).replace(/</g, "\\u003c")};
+        let idx = 0;
 
-    <script>
-      // Embed data (escaped "<" to avoid closing script)
-      const products = ${JSON.stringify(imgStringProducts).replace(/</g, "\\u003c")};
-      let idx = 0;
+        function render() {
+          if (!products[idx]) {
+            // 🔥 no more candidates: invalidate this pair and move on
+            window.location.href = "${invalidateLink}";
+            return;
+          }
+          const cand = products[idx];
 
-      function render() {
-        if (!products[idx]) {
-          // No more candidates -> invalidate
-          window.location.href = "${invalidateLink}";
-          return;
+          const imgEl = document.getElementById("productImage");
+          if (cand.img) imgEl.src = "data:image/jpeg;base64," + cand.img;
+          else imgEl.removeAttribute("src");
+
+          const a = document.getElementById("productLink");
+          a.href = cand.link || "#";
+          a.textContent = cand.link || "#";
         }
 
-        var cand = products[idx];
-
-        // image
-        var imgEl = document.getElementById("productImage");
-        if (cand.img) {
-          imgEl.src = "data:image/jpeg;base64," + cand.img;
-        } else {
-          imgEl.removeAttribute("src");
+        function yuck() { idx++; render(); }
+        function yum() {
+          const cand = products[idx] || { link: "", price: "" };
+          const href = "${validateLink}" +
+            "&link=" + encodeURIComponent(cand.link || "") +
+            "&price=" + encodeURIComponent(String(cand.price || ""));
+          window.location.href = href;
         }
 
-        // link
-        var link = cand.link || "#";
-        var a = document.getElementById("productLink");
-        a.href = link;
-        a.textContent = link;
-      }
-
-      function yuck() {
-        idx++;
         render();
-      }
-
-      function yum() {
-        var cand = products[idx] || { link: "", price: "" };
-        var href = "${validateLink}" +
-          "&link=" + encodeURIComponent(cand.link || "") +
-          "&price=" + encodeURIComponent(String(cand.price || ""));
-        window.location.href = href;
-      }
-
-      // first render
-      render();
-    </script>
+      </script>
+    </div>
   `;
-
-  res.send(homeButton + text);
+  res.send(html);
 });
+
 
 // ---------------------------
 // SEEDING + PRICE REFRESH ROUTES
@@ -534,35 +626,22 @@ app.post("/admin/import-sellers-from-json", async (req, res) => {
     const raw = fs.readFileSync("./client/src/db/json/sellers.json", "utf8");
     const sellers = JSON.parse(raw);
 
-    // existing sellers by (name, base_url) for quick "already exists" check
     const existing = await query("all", "select/all_sellers", []);
-    const existingKey = new Set(
-      existing.map(s => `${s.name}|||${s.base_url}`)
-    );
+    const existingKey = new Set(existing.map(s => `${s.name}|||${s.base_url}`));
 
     let inserted = 0;
     for (const s of sellers) {
       const key = `${s.name}|||${s.base_url}`;
-      if (existingKey.has(key)) continue; // skip if it exists
+      if (existingKey.has(key)) continue;
 
-      // insert seller
-      const info = await query("run", "insert/seller", [
-        s.name,
-        s.base_url,
-        s.search_url,
-        s.product_selector,
-        s.name_selector,
-        s.link_selector,
-        s.price_selector,
-        s.sale_selector,
-        s.image_selector,
+      await query("run", "insert/seller", [
+        s.name, s.base_url, s.search_url, s.product_selector,
+        s.name_selector, s.link_selector, s.price_selector, s.sale_selector, s.image_selector,
       ]);
 
-      // sqlite3 run() "this" has .lastID
       const newSellerRow = await query("get", "select/seller_by_name_base", [s.name, s.base_url]);
       const newSellerId = newSellerRow?.id;
 
-      // seed rows for this new seller across all products
       if (newSellerId) {
         await query("run", "insert/seed_prices_for_new_seller", [newSellerId]);
         inserted++;
@@ -570,7 +649,6 @@ app.post("/admin/import-sellers-from-json", async (req, res) => {
       }
     }
 
-    // refresh the in-memory counter
     const unchecked = await query("all", "select/unchecked_prices", []);
     remainingCount = unchecked.length;
 
@@ -588,22 +666,18 @@ app.post("/admin/import-products-from-json", async (req, res) => {
     const products = JSON.parse(raw);
 
     const existing = await query("all", "select/all_products", []);
-    const existingKey = new Set(
-      existing.map(p => `${p.name}|||${p.search_term}`)
-    );
+    const existingKey = new Set(existing.map(p => `${p.name}|||${p.search_term}`));
 
     let inserted = 0;
     for (const p of products) {
       const key = `${p.name}|||${p.search_term}`;
-      if (existingKey.has(key)) continue; // skip existing
+      if (existingKey.has(key)) continue;
 
       await query("run", "insert/product", [p.name, p.search_term]);
 
-      // get the new product id
       const newProdRow = await query("get", "select/product_by_name_term", [p.name, p.search_term]);
       const newProductId = newProdRow?.id;
 
-      // seed rows for this new product across all sellers
       if (newProductId) {
         await query("run", "insert/seed_prices_for_new_product", [newProductId]);
         inserted++;
@@ -611,7 +685,6 @@ app.post("/admin/import-products-from-json", async (req, res) => {
       }
     }
 
-    // refresh the in-memory counter
     const unchecked = await query("all", "select/unchecked_prices", []);
     remainingCount = unchecked.length;
 
@@ -649,7 +722,6 @@ async function fetchPriceFromLinkWithSellerSelectors(seller, link) {
       };
       const sale = saleSel ? document.querySelector(saleSel)?.textContent : "";
       const reg  = priceSel ? document.querySelector(priceSel)?.textContent : "";
-      // also try [itemprop=price]
       const item = document.querySelector("[itemprop='price']")?.getAttribute?.("content")
                 || document.querySelector("[itemprop='price']")?.textContent
                 || "";
@@ -675,7 +747,6 @@ app.post("/refresh-prices", async (req, res) => {
     ? [await query("get", "select/seller_id", [oneSellerId])]
     : await query("all", "select/all_sellers", []);
 
-  // validated pairs: seller_id, product_id, link
   const pairs = oneSellerId
     ? await query("all", "select/validated_pairs_by_seller", [oneSellerId])
     : await query("all", "select/validated_pairs", []);
@@ -683,7 +754,6 @@ app.post("/refresh-prices", async (req, res) => {
   const limit = pLimit(4);
   let updated = 0;
 
-  // Map seller_id -> seller row for selectors
   const sellerById = {};
   sellers?.forEach((s) => { if (s) sellerById[s.id] = s; });
 
@@ -697,7 +767,6 @@ app.post("/refresh-prices", async (req, res) => {
         const price = await fetchPriceFromLinkWithSellerSelectors(seller, link);
         if (price == null) return;
 
-        // optional: write price history if you added the table
         try {
           await query("run", "insert/price_history", [seller_id, product_id, price, link]);
         } catch { /* history table may not exist; ignore */ }
@@ -711,6 +780,303 @@ app.post("/refresh-prices", async (req, res) => {
   );
 
   res.json({ ok: true, updated, total: pairs?.length || 0 });
+});
+
+
+// ---------------------------
+// NEW: AUTO-VALIDATE & REPORT-WRONG (API)
+// ---------------------------
+
+// Auto-validate the FIRST candidate for each unchecked pair.
+// Usage:
+//   POST /auto-validate
+//   POST /auto-validate?seller=123
+//   POST /auto-validate?product=456
+app.post("/auto-validate", async (req, res) => {
+  // read from body (form POST) first, then query as fallback
+  const sellerFilterRaw  = (req.body?.seller  ?? req.query?.seller  ?? "").toString().trim();
+  const productFilterRaw = (req.body?.product ?? req.query?.product ?? "").toString().trim();
+
+  // optional: normalize to integers if you like
+  const sellerFilter  = sellerFilterRaw && !Number.isNaN(Number(sellerFilterRaw)) ? Number(sellerFilterRaw) : null;
+  const productFilter = productFilterRaw && !Number.isNaN(Number(productFilterRaw)) ? Number(productFilterRaw) : null;
+
+  let uncheckedSql = `
+    SELECT pr.seller_id, pr.product_id
+    FROM prices pr
+    WHERE pr.validated IS NULL
+  `;
+  const args = [];
+  if (sellerFilter !== null) { uncheckedSql += " AND pr.seller_id = ?"; args.push(sellerFilter); }
+  if (productFilter !== null) { uncheckedSql += " AND pr.product_id = ?"; args.push(productFilter); }
+
+  // If you intended "exactly this one pair" when both are provided, this already enforces that.
+  // You can also add LIMIT 1 if you only want one row even if duplicates exist.
+
+  const uncheckedPairs = await new Promise((resolve, reject) => {
+    db.all(uncheckedSql, args, (err, rows) => err ? reject(err) : resolve(rows || []));
+  });
+
+  if (!uncheckedPairs.length) {
+    return res.json({ ok: true, processed: 0, validated: 0, skipped: 0, remainingCount });
+  }
+
+  const [sellers, products] = await Promise.all([
+    query("all", "select/all_sellers", []),
+    query("all", "select/all_products", []),
+  ]);
+  const sellersById = Object.fromEntries(sellers.map(s => [s.id, s]));
+  const productsById = Object.fromEntries(products.map(p => [p.id, p]));
+
+  const limit = pLimit(4);
+  let validated = 0, skipped = 0;
+
+  await Promise.all(uncheckedPairs.map(({ seller_id, product_id }) => limit(async () => {
+    const seller = sellersById[seller_id];
+    const product = productsById[product_id];
+    if (!seller || !product) { skipped++; return; }
+
+    try {
+      const candidates = await searchSeller(seller, product);
+      const first = candidates?.[0];
+      if (!first || !first.link) { skipped++; return; }
+
+      await query("run", "update/auto_validate_price", [
+        first.price ?? null,
+        first.link,
+        seller_id,
+        product_id,
+      ]);
+
+      validated++;
+    } catch (e) {
+      console.error("auto-validate error:", e?.message || e);
+      skipped++;
+    }
+  })));
+
+  await (async () => {
+    const unchecked = await query("all", "select/count_unsorted", []);
+    remainingCount = unchecked.length;
+  })();
+
+  res.json({
+    ok: true,
+    processed: uncheckedPairs.length,
+    validated,
+    skipped,
+    remainingCount
+  });
+});
+
+
+// --- Report wrong by LINK (no IDs needed) ---
+
+// Simple form page (optional; handy from /product or /admin)
+app.get("/report-by-link", (req, res) => {
+  const link = (req.query.link || "").toString();
+  const productName = (req.query.productName || "").toString();
+  const sellerName = (req.query.sellerName || "").toString();
+
+  const html = `
+    <div style="max-width:640px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+      <a href="/admin"><button>⬅ Back to Admin</button></a>
+      <h2>Report wrong by link</h2>
+      <form method="POST" action="/report-wrong-by-link" style="display:flex; flex-direction:column; gap:8px; max-width:520px;">
+        <label>Item Link (paste the retailer URL)
+          <input name="link" value="${link}" placeholder="https://store.example.com/item/123" required />
+        </label>
+        <label>Reason (optional)
+          <textarea name="reason" rows="4" placeholder="What’s wrong? e.g., wrong kit, OOS page, etc."></textarea>
+        </label>
+        <div style="font-size:14px;color:#666;">
+          ${sellerName ? `Seller: ${sellerName}` : ""} ${productName ? ` — Product: ${productName}` : ""}
+        </div>
+        <button type="submit" style="width:200px; padding:10px; background:#e74c3c; color:#fff; border:none; border-radius:8px;">
+          Unvalidate by Link
+        </button>
+      </form>
+    </div>
+  `;
+  res.send(html);
+});
+
+// POST endpoint that unvalidates by link
+app.post("/report-wrong-by-link", async (req, res) => {
+  const link = (req.body?.link ?? req.query?.link ?? "").toString().trim();
+  const reason = (req.body?.reason ?? req.query?.reason ?? "").toString().trim();
+  if (!link) return res.status(400).send("link is required");
+
+  try {
+    // optional logging table (safe to attempt; ignore errors if not present)
+    try {
+      await query("run", "create/bug_reports");
+      await query("run", "insert/bug_report_minimal", [link, reason || null]);
+    } catch {}
+
+    // unvalidate every row that matches this link
+    await query("run", "update/unvalidate_by_link", [link]);
+
+    // refresh the counter
+    const unchecked = await query("all", "select/count_unsorted", []);
+    remainingCount = unchecked.length;
+
+    res.send(`
+      <div style="max-width:640px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+        <p>Reported. Any row with this link is now back in the Tinder queue:</p>
+        <p style="word-break:break-all;"><code>${link}</code></p>
+        <div style="display:flex; gap:8px;">
+          <a href="/tinder"><button>Go to Tinder</button></a>
+          <a href="/admin"><button>Back to Admin</button></a>
+        </div>
+      </div>
+    `);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Failed to report by link.");
+  }
+});
+
+
+// Simple “Report wrong” form (frontend-friendly too)
+app.get("/report", (req, res) => {
+  const s = (req.query.s || "").trim();
+  const p = (req.query.p || "").trim();
+  const productName = req.query.productName ? String(req.query.productName) : "";
+  const sellerName  = req.query.sellerName ? String(req.query.sellerName) : "";
+
+  const html = `
+    <div style="max-width:640px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+      <a href="/admin"><button>⬅ Back to Admin</button></a>
+      <h2>Report wrong pairing</h2>
+      <form method="POST" action="/report-wrong" style="display:flex; flex-direction:column; gap:8px; max-width:520px;">
+        <label>Seller ID <input name="seller" value="${s}" placeholder="seller_id" required/></label>
+        <label>Product ID <input name="product" value="${p}" placeholder="product_id" required/></label>
+        <label>Reason (optional) <textarea name="reason" rows="4" placeholder="What’s wrong? e.g., wrong kit, OOS page, etc."></textarea></label>
+        <div style="font-size:14px;color:#666;">${sellerName || ""} ${productName ? "— " + productName : ""}</div>
+        <button type="submit" style="width:160px; padding:10px; background:#e74c3c; color:#fff; border:none; border-radius:8px;">Send report</button>
+      </form>
+    </div>
+  `;
+  res.send(html);
+});
+
+// Report wrong: records the report and unvalidates the pair.
+app.post("/report-wrong", async (req, res) => {
+  const s = (req.body.seller || req.query.seller || "").trim();
+  const p = (req.body.product || req.query.product || "").trim();
+  const reason = (req.body.reason || req.query.reason || "").trim();
+  if (!s || !p) return res.status(400).send("seller and product are required");
+
+  try {
+    // optional logging table (safe to attempt)
+    try {
+      await query("run", "create/bug_reports");
+      await query("run", "insert/bug_report", [s, p, reason || null]);
+    } catch { /* ignore if missing */ }
+
+    await query("run", "update/unvalidate_price", [s, p]);
+    await recomputeRemaining();
+
+    res.send(`<div style="max-width:640px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+      <p>Reported. The pair (${s}, ${p}) is back in the Tinder queue.</p>
+      <div style="display:flex; gap:8px;">
+        <a href="/tinder"><button>Go to Tinder</button></a>
+        <a href="/admin"><button>Back to Admin</button></a>
+      </div>
+    </div>`);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send("Failed to report.");
+  }
+});
+
+// ---------------------------
+// ADMIN PANEL (buttons/forms)
+// ---------------------------
+app.get("/admin", async (req, res) => {
+  const unchecked = await query("all", "select/count_unsorted", []);
+  const count = unchecked.length;
+
+  const html = `
+  <div style="max-width:900px;margin:24px auto;font-family:system-ui,Segoe UI,Arial">
+    <h1 style="margin:0 0 12px 0;">Admin Panel</h1>
+    <div style="margin-bottom:16px;color:#555;">Remaining unchecked prices: <b>${count}</b></div>
+
+    <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:20px;">
+      <a href="/"><button>Home</button></a>
+      <a href="/tinder"><button>Tinder</button></a>
+      <a href="/export"><button>Export Data.ts</button></a>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:16px;">
+      <!-- Auto-Validate -->
+      <div style="border:1px solid #ddd; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px 0;">Auto-Validate (first hit)</h3>
+        <form method="POST" action="/auto-validate" style="display:flex; flex-direction:column; gap:8px;">
+          <input name="seller" placeholder="Seller ID (optional)" />
+          <input name="product" placeholder="Product ID (optional)" />
+          <button type="submit" style="background:#2ecc71;color:#fff;border:none;border-radius:8px;padding:8px 12px;">Run Auto-Validate</button>
+        </form>
+      </div>
+
+      <!-- Refresh Prices -->
+      <div style="border:1px solid #ddd; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px 0;">Refresh Prices (validated only)</h3>
+        <form method="POST" action="/refresh-prices" style="display:flex; flex-direction:column; gap:8px;">
+          <input name="seller" placeholder="Seller ID (optional)" />
+          <button type="submit" style="background:#3498db;color:#fff;border:none;border-radius:8px;padding:8px 12px;">Refresh</button>
+        </form>
+      </div>
+
+      <!-- Seed New Seller -->
+      <div style="border:1px solid #ddd; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px 0;">Seed Rows for New Seller</h3>
+        <form method="POST" action="/seed/new-seller" style="display:flex; flex-direction:column; gap:8px;">
+          <input name="seller" placeholder="Seller ID" required />
+          <button type="submit" style="background:#8e44ad;color:#fff;border:none;border-radius:8px;padding:8px 12px;">Seed Seller Rows</button>
+        </form>
+      </div>
+
+      <!-- Seed New Product -->
+      <div style="border:1px solid #ddd; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px 0;">Seed Rows for New Product</h3>
+        <form method="POST" action="/seed/new-product" style="display:flex; flex-direction:column; gap:8px;">
+          <input name="product" placeholder="Product ID" required />
+          <button type="submit" style="background:#8e44ad;color:#fff;border:none;border-radius:8px;padding:8px 12px;">Seed Product Rows</button>
+        </form>
+      </div>
+
+      <!-- Import Sellers -->
+      <div style="border:1px solid #ddd; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px 0;">Import Sellers (JSON)</h3>
+        <form method="POST" action="/admin/import-sellers-from-json">
+          <button type="submit" style="background:#16a085;color:#fff;border:none;border-radius:8px;padding:8px 12px;">Import & Seed New Sellers</button>
+        </form>
+      </div>
+
+      <!-- Import Products -->
+      <div style="border:1px solid #ddd; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px 0;">Import Products (JSON)</h3>
+        <form method="POST" action="/admin/import-products-from-json">
+          <button type="submit" style="background:#16a085;color:#fff;border:none;border-radius:8px;padding:8px 12px;">Import & Seed New Products</button>
+        </form>
+      </div>
+
+      <!-- Report Wrong -->
+      <div style="border:1px solid #ddd; border-radius:10px; padding:12px;">
+        <h3 style="margin:0 0 8px 0;">Report Wrong Pair</h3>
+        <form method="POST" action="/report-wrong" style="display:flex; flex-direction:column; gap:8px;">
+          <input name="seller" placeholder="Seller ID" required />
+          <input name="product" placeholder="Product ID" required />
+          <textarea name="reason" rows="3" placeholder="Reason (optional)"></textarea>
+          <button type="submit" style="background:#e74c3c;color:#fff;border:none;border-radius:8px;padding:8px 12px;">Submit Report</button>
+        </form>
+      </div>
+    </div>
+  </div>
+  `;
+  res.send(html);
 });
 
 // ---------------------------

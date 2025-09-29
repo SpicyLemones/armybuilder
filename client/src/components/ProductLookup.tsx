@@ -19,6 +19,38 @@ import { Search, ExternalLink, X } from "lucide-react";
 import { Products as sourceProducts, type Product } from "../data/Data";
 
 /* ------------------------------------------------
+   CONFIG: where to file GitHub issues
+--------------------------------------------------*/
+
+const REPO_OWNER = "SpicyLemones"; // ← change me
+const REPO_NAME  = "Pricehammer";          // ← change me
+
+/* Small helper to open a prefilled GitHub Issue for “wrong price/link” */
+function reportWrong(link: string | undefined, sellerName?: string, productName?: string) {
+  const cleanLink = (link ?? "").trim();
+  if (!cleanLink) {
+    alert("No link to report for this retailer.");
+    return;
+  }
+  const reason = window.prompt("What's wrong with this link/price? (optional)") || "";
+
+  const title = encodeURIComponent(
+    `Wrong price/link: ${productName ?? ""} @ ${sellerName ?? ""}`.trim()
+  );
+
+  const body = encodeURIComponent(
+`**Seller:** ${sellerName ?? ""}
+**Product:** ${productName ?? ""}
+**Link:** ${cleanLink}
+
+**Notes:** ${reason}`
+  );
+
+  const issueUrl = `https://github.com/${REPO_OWNER}/${REPO_NAME}/issues/new?title=${title}&body=${body}`;
+  window.open(issueUrl, "_blank");
+}
+
+/* ------------------------------------------------
    Types, labels, & helpers
 --------------------------------------------------*/
 
@@ -61,19 +93,19 @@ const hasAnyPrice = (p: Product) => bestPriceOrNull(p) !== null;
 const cmpPriceAsc = (a: Product, b: Product) => {
   const A = bestPriceOrNull(a);
   const B = bestPriceOrNull(b);
-  if (A === null && B === null) return 0; // both missing → equal
-  if (A === null) return 1;               // missing goes to end
+  if (A === null && B === null) return 0;
+  if (A === null) return 1;
   if (B === null) return -1;
-  return A - B;                           // normal asc
+  return A - B;
 };
 
 const cmpPriceDesc = (a: Product, b: Product) => {
   const A = bestPriceOrNull(a);
   const B = bestPriceOrNull(b);
   if (A === null && B === null) return 0;
-  if (A === null) return 1;               // missing goes to end
+  if (A === null) return 1;
   if (B === null) return -1;
-  return B - A;                           // normal desc
+  return B - A;
 };
 
 const sample = <T,>(arr: T[], n: number) => {
@@ -177,11 +209,11 @@ export function ProductLookup() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-display font-bold">Warhammer Price Lookup</h1>
-        <p>Compare prices for Warhammer kits across AU retailers.</p>
+        <h1 className="text-3xl font-display font-bold">WargamingPrice Lookup</h1>
+        <p>Compare prices for Wargaming kits across AU retailers, including Warhammer.</p>
 
         <p className="text-muted-foreground">
-          Search for Warhammer units and compare prices across retailers
+          Search for Wargaming units and compare prices across retailers
         </p>
       </div>
 
@@ -315,9 +347,7 @@ function ProductCard({ product }: { product: ProductExtended }) {
   const visible = showAll ? sortedRetailers : sortedRetailers.slice(0, 3); // top 3
 
   // thumbnail (fallback)
-  const thumb =
-    product.image ||
-    "./images/placeholder.png";
+  const thumb = product.image || "./images/placeholder.png";
 
   return (
     <>
@@ -399,7 +429,7 @@ function ProductCard({ product }: { product: ProductExtended }) {
               {visible.map((r, idx) => (
                 <div
                   key={`${r.store}-${idx}`}
-                  className="grid grid-cols-[1fr_auto_auto] items-center gap-3 px-3 py-2"
+                  className="grid grid-cols-[1fr_auto_auto_auto] items-center gap-3 px-3 py-2"
                 >
                   <div className="font-medium">{r.store || "Unknown Store"}</div>
                   <div className="font-bold tabular-nums">
@@ -417,6 +447,16 @@ function ProductCard({ product }: { product: ProductExtended }) {
                         No Link
                       </Badge>
                     )}
+                  </div>
+                  <div>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => reportWrong(r.url, r.store, product.name)}
+                      title="Report wrong price/link"
+                    >
+                      Report
+                    </Button>
                   </div>
                 </div>
               ))}
